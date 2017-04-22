@@ -67,13 +67,13 @@ AudioControlSGTL5000     audioShield;     //xy=1393.5160293579102,486.5157604217
 
 
 void setup() {
-    AudioMemory(50);
+  AudioMemory(50);
       // turn on the output
   audioShield.enable();
   audioShield.volume(0.5);
   mixer1.gain(0,0.3);
   mixer1.gain(1,0.3);
-  mixer1.gain(2,0.3;
+  mixer1.gain(2,0.3);
   mixer2.gain(0,0.3);
   mixer2.gain(1,0.3);
   mixer2.gain(2,0.3);
