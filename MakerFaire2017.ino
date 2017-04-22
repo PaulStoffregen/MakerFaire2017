@@ -1,10 +1,15 @@
 #include <Wire.h>
 
+elapsedMillis sinceTempo;
+
 #include <Audio.h>
 #include <Wire.h>
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
+
+int tempo=120;
+int stepCount;
 
 // GUItool: begin automatically generated code
 AudioSynthNoiseWhite     noise1;         //xy=390.5158805847168,223.5156707763672
@@ -176,6 +181,11 @@ void do_left_panel(void)
 
 void do_center_panel(void)
 {
+	if(sinceTempo>=(15000/tempo))
+	{
+		stepCount++;
+		sinceTempo=0;
+	}
 	// button step sequencer stuff goes here
 }
 
