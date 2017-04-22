@@ -65,6 +65,11 @@ AudioConnection          patchCord25(mixer2, 0, i2s2, 1);
 AudioControlSGTL5000     audioShield;     //xy=1393.5160293579102,486.51576042175293
 // GUItool: end automatically generated code
 
+// MIDI SCALES 
+int dorian[8] = {0, 2, 3, 5, 7, 9, 10, 12};  // dorian 
+int majorPentatonic[8] = {0, 2, 4, 7, 9, 12, 14, 16};  // major pentatonic
+int minorPentatonic[8] = {0, 3, 5, 7, 10, 12, 15, 17}; // minor pentatonic 
+int octaves[5] = {0, 12, 24, 36, 48}; // octaves
 
 void setup() {
   AudioMemory(50);
@@ -217,6 +222,9 @@ void rightTrigger()
 	
 }
 
+float mtof(int note){      // Outputs a float freq based on incoming MIDI note. How to use: mtof(noteValue)  
+   return (440.0f * exp2f((float)(note - 69) * 0.0833333f));
+  }
 
 
 
