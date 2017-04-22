@@ -57,12 +57,16 @@ AudioConnection          patchCord22(mix2, 0, mixer2, 1);
 AudioConnection          patchCord23(multiply2, 0, mixer2, 2);
 AudioConnection          patchCord24(mixer2, 0, i2s2, 0);
 AudioConnection          patchCord25(mixer2, 0, i2s2, 1);
-AudioControlSGTL5000     sgtl5000_1;     //xy=1393.5160293579102,486.51576042175293
-AudioControlSGTL5000     audioShield;    //xy=1397.5158157348633,432.0001163482666
+AudioControlSGTL5000     audioShield;     //xy=1393.5160293579102,486.51576042175293
 // GUItool: end automatically generated code
 
 
 void setup() {
+    AudioMemory(50);
+      // turn on the output
+  audioShield.enable();
+  audioShield.volume(0.5);
+
 	Wire.begin();
 	Wire.setClock(400000);
 	pca9685_config(0x40);
