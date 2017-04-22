@@ -183,6 +183,8 @@ void do_center_panel(void)
 {
 	if(sinceTempo>=(15000/tempo))
 	{
+		leftTrigger();
+		rightTrigger();
 		stepCount++;
 		sinceTempo=0;
 	}
@@ -193,6 +195,16 @@ void do_center_panel(void)
 void do_right_panel(void)
 {
 	// touch panel synth stuff goes here
+}
+
+void leftTrigger()
+{
+	
+}
+
+void rightTrigger()
+{
+	
 }
 
 
