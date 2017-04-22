@@ -71,11 +71,21 @@ void setup() {
       // turn on the output
   audioShield.enable();
   audioShield.volume(0.5);
-  mixer1.gain(0.2);
-  mixer2.gain(0.2);
-  mixer3.gain(0.2);
-  mix1.gain(0.2);
-  mix2.gain(0.2);
+  mixer1.gain(0,0.3);
+  mixer1.gain(1,0.3);
+  mixer1.gain(2,0.3;
+  mixer2.gain(0,0.3);
+  mixer2.gain(1,0.3);
+  mixer2.gain(2,0.3);
+  mixer3.gain(0,0.3);
+  mixer3.gain(1,0.3);
+  mixer3.gain(2,0.3);
+  mix1.gain(0,0.25);
+  mix1.gain(1,0.25);
+  mix1.gain(2,0.25);
+  mix1.gain(3,0.25);
+  mix2.gain(0,0.5);
+  mix2.gain(1,0.5);
 
 	Wire.begin();
 	Wire.setClock(400000);
