@@ -69,8 +69,8 @@ void setup() {
   mixer1.gain(0.2);
   mixer2.gain(0.2);
   mixer3.gain(0.2);
-  mixer4.gain(0.2);
-  mixer5.gain(0.2);
+  mix1.gain(0.2);
+  mix2.gain(0.2);
 
 	Wire.begin();
 	Wire.setClock(400000);
