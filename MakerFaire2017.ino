@@ -7,6 +7,23 @@ elapsedMillis sinceTempo;
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
+#include <stdint.h>  //touchscreeen
+#include "TouchScreen.h"
+
+// These are the pins for the touchscreen
+#define YP A3  // must be an analog pin, use "An" notation!
+#define XM A4  // must be an analog pin, use "An" notation!
+#define YM 8   // can be a digital pin
+#define XP 9   // can be a digital pin
+#define TsPot1 A5 // 
+#define TsPot2 A6 // 
+#define TsPot3 A7 // 
+int TsPot1Val = 0;
+int TsPot2Val = 0;
+int TsPot3Val = 0;
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);  //use a multimeter to read the resistance between X+ and X- and replace value which is currently 300.
+
+
 
 int tempo=120;
 int stepCount;
@@ -207,9 +224,25 @@ void do_center_panel(void)
 }
 
 
-void do_right_panel(void)
+void do_right_panel(void)   // touch panel synth stuff goes here
 {
-	// touch panel synth stuff goes here
+  
+ TsPot1Val = analogRead(TsPot1);
+ TsPot2Val = analogRead(TsPot2);
+ TsPot3Val = analogRead(TsPot3);
+ TSPoint p = ts.getPoint();    // a point object holds x y and z coordinates
+
+  if (p.z > ts.pressureThreshhold) {  //we have some minimum pressure we consider 'valid' .... pressure of 0 means no pressing!
+     Serial.print("X = "); Serial.print(p.x);
+     Serial.print("\tY = "); Serial.print(p.y);
+     Serial.print("\tPressure = "); Serial.println(p.z);
+  }
+//add if statement to only print if val change...
+  Serial.print("Pot1Val = ");  Serial.print(TsPot1Val);
+  Serial.print("Pot2Val = ");  Serial.print(TsPot2Val);
+  Serial.print("Pot3Val = ");  Serial.println(TsPot3Val);
+
+//  delay(100);  
 }
 
 void leftTrigger()
