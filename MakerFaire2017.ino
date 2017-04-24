@@ -23,10 +23,26 @@ int TsPot2Val = 0;
 int TsPot3Val = 0;
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);  //use a multimeter to read the resistance between X+ and X- and replace value which is currently 300.
 
-
-
 int tempo=120;
 int stepCount;
+
+elapsedMicros sinceTest1;
+int timeTaken = 0; 
+
+int touchSensor1 = 0;
+int touchSensor2 = 0;
+int touchSensor3 = 0;
+int touchSensor4 = 0;
+int touchSensor5 = 0; 
+
+int pot1Raw = 0; 
+int pot2Raw = 0; 
+int pot3Raw = 0;
+
+int averageMinimum = 0; 
+
+float minimum = 0; 
+float smoothness = 0; 
 
 // GUItool: begin automatically generated code
 AudioSynthNoiseWhite     noise1;         //xy=390.5158805847168,223.5156707763672
@@ -113,6 +129,12 @@ void setup() {
 	Wire.setClock(400000);
 	pca9685_config(0x40);
 	mcp23017_config(0x20, 0xFFFF);
+
+  int sum = 0; 
+  for (int x = 0; x < 50; x++){
+  sum = sum + touchRead(0);
+  }
+  minimum = sum / 50; 
 }
 
 void led(unsigned int lednum, unsigned int value)
@@ -207,7 +229,66 @@ void led_test(void)
 
 void do_left_panel(void)
 {
-	// cap touch stuff goes here
+  // sinceTest1 = 0; 
+  
+  float touchSensor1 = (touchRead(0));
+  //touchSensor2 = (touchRead(1));
+  //touchSensor3 = (touchRead(30));  
+  //touchSensor4 = (touchRead(29));  
+  //touchSensor5 = (touchRead(16));
+
+  //pot1Raw = (analogRead(33));
+  //pot2Raw = (analogRead(31));
+  //pot3Raw = (analogRead(32));  
+
+  // timeTaken = sinceTest1;
+
+  float difference = (touchSensor1 - minimum);
+  if (difference > 0){ 
+  smoothness = 3000; // "Attack time"
+  }
+  else {
+  smoothness = 5; // "Release time" 
+  }
+  minimum = minimum + (difference / smoothness);
+
+  float scaledOutput = touchSensor1 - minimum;
+
+  scaledOutput = max(scaledOutput, 0); 
+
+  if (scaledOutput > 1000){
+  //envelope1.noteOn();
+  }
+  else{
+  //envelope1.noteOff(); 
+  }
+  
+  //Serial.print(timeTaken);
+  //Serial.print(",");
+  //Serial.print("<==elapsedMicros,"); 
+  Serial.print(touchSensor1);
+  Serial.print(",<==rawData,");
+  Serial.print(minimum);
+  Serial.print("<==averageMinimum,");
+  Serial.print(scaledOutput);
+  Serial.print("<==scaledOutput");
+  /*
+  Serial.print(touchSensor2);
+  Serial.print(",");
+  Serial.print(touchSensor3);
+  Serial.print(",");
+  Serial.print(touchSensor4);
+  Serial.print(",");
+  Serial.print(touchSensor5);
+  Serial.print(",");
+  Serial.print(pot1Raw);
+  Serial.print(",");
+  Serial.print(pot2Raw);
+  Serial.print(",");
+  Serial.print(pot3Raw);
+  Serial.print(",");
+  */
+  Serial.println();
 }
 
 
