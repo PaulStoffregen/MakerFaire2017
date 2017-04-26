@@ -26,9 +26,6 @@ TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);  //use a multimeter to read t
 int tempo=120;
 int stepCount;
 
-elapsedMicros sinceTest1;
-int timeTaken = 0; 
-
 int touchSensor1 = 0;
 int touchSensor2 = 0;
 int touchSensor3 = 0;
@@ -44,58 +41,56 @@ int averageMinimum = 0;
 float minimum = 0; 
 float smoothness = 0; 
 
+boolean gate1[2];
+
+float sensorMinimum1 = 0; 
+float sensorSmoothness1 = 0; 
+float filterCutoff1 = 0; 
+
 // GUItool: begin automatically generated code
-AudioSynthNoiseWhite     noise1;         //xy=390.5158805847168,223.5156707763672
-AudioSynthWaveform       waveform1;      //xy=399.5159111022949,114.51568222045898
-AudioSynthWaveform       waveform2;      //xy=400.5158805847168,170.51567554473877
-AudioSynthWaveform       waveform3;      //xy=447.51570892333984,687.515796661377
-AudioSynthWaveform       waveform4;      //xy=448.51573181152344,744.5157670974731
-AudioSynthNoiseWhite     noise2;         //xy=455.51575469970703,791.5158290863037
-AudioMixer4              mixer1;         //xy=560.5159034729004,172.51566314697266
-AudioPlayMemory          sound1;         //xy=580.5156784057617,365.0000476837158
-AudioPlayMemory          sound0;         //xy=581.5156841278076,315.0000305175781
-AudioPlayMemory          sound2;         //xy=584.5157089233398,411.00012588500977
-AudioPlayMemory          sound3;         //xy=587.5156936645508,461.00006675720215
-AudioEffectEnvelope      envelope2;      //xy=600.5160064697266,242.5156955718994
-AudioMixer4              mixer3;         //xy=624.5157318115234,739.5157985687256
-AudioEffectEnvelope      envelope3;      //xy=630.515625,811.5157012939453
-AudioEffectEnvelope      envelope1;      //xy=755.5159797668457,121.51566123962402
-AudioFilterStateVariable filter1;        //xy=759.516040802002,178.51570892333984
-AudioPlayMemory          sound4;         //xy=768.5157165527344,586.0002059936523
-AudioMixer4              mix1;           //xy=774.515682220459,517.0000820159912
-AudioEffectEnvelope      envelope4;      //xy=796.5156478881836,687.5157203674316
-AudioFilterStateVariable filter2;        //xy=806.5158271789551,744.5159206390381
-AudioEffectMultiply      multiply1;      //xy=903.5158920288086,158.5156888961792
-AudioMixer4              mix2;           //xy=921.5157165527344,535.0001049041748
-AudioEffectMultiply      multiply2;      //xy=951.5157127380371,723.5157222747803
-AudioMixer4              mixer2;         //xy=1258.5158081054688,560.5156707763672
-AudioOutputI2S           i2s2;           //xy=1402.5157508850098,566.5156631469727
-AudioConnection          patchCord1(noise1, 0, mixer1, 2);
-AudioConnection          patchCord2(waveform1, 0, mixer1, 0);
-AudioConnection          patchCord3(waveform2, 0, mixer1, 1);
-AudioConnection          patchCord4(waveform3, 0, mixer3, 0);
-AudioConnection          patchCord5(waveform4, 0, mixer3, 1);
-AudioConnection          patchCord6(noise2, 0, mixer3, 2);
-AudioConnection          patchCord7(mixer1, 0, filter1, 0);
-AudioConnection          patchCord8(sound1, 0, mix1, 1);
-AudioConnection          patchCord9(sound0, 0, mix1, 0);
-AudioConnection          patchCord10(sound2, 0, mix1, 2);
-AudioConnection          patchCord11(sound3, 0, mix1, 3);
-AudioConnection          patchCord12(envelope2, 0, filter1, 1);
-AudioConnection          patchCord13(mixer3, 0, filter2, 0);
-AudioConnection          patchCord14(envelope3, 0, filter2, 1);
-AudioConnection          patchCord15(envelope1, 0, multiply1, 0);
-AudioConnection          patchCord16(filter1, 0, multiply1, 1);
-AudioConnection          patchCord17(sound4, 0, mix2, 1);
-AudioConnection          patchCord18(mix1, 0, mix2, 0);
-AudioConnection          patchCord19(envelope4, 0, multiply2, 0);
-AudioConnection          patchCord20(filter2, 0, multiply2, 1);
-AudioConnection          patchCord21(multiply1, 0, mixer2, 0);
-AudioConnection          patchCord22(mix2, 0, mixer2, 1);
-AudioConnection          patchCord23(multiply2, 0, mixer2, 2);
-AudioConnection          patchCord24(mixer2, 0, i2s2, 0);
-AudioConnection          patchCord25(mixer2, 0, i2s2, 1);
-AudioControlSGTL5000     audioShield;     //xy=1393.5160293579102,486.51576042175293
+#include <Audio.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <SD.h>
+#include <SerialFlash.h>
+
+// GUItool: begin automatically generated code
+#include <Audio.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <SD.h>
+#include <SerialFlash.h>
+
+// GUItool: begin automatically generated code
+AudioPlayMemory          sound1;         //xy=584.515625,393.9999974370003
+AudioPlayMemory          sound0;         //xy=585.515625,343.9999974370003
+AudioPlayMemory          sound2;         //xy=588.515625,439.9999974370003
+AudioPlayMemory          sound3;         //xy=591.515625,489.9999974370003
+AudioPlayMemory          sound4;         //xy=772.515625,614.9999974370003
+AudioMixer4              mix1;           //xy=778.515625,545.9999974370003
+AudioSynthWaveform       waveform1;      //xy=810.5156593322754,372.00001883506775
+AudioMixer4              mix2;           //xy=925.515625,563.9999974370003
+AudioFilterStateVariable filter1;        //xy=945.5156593322754,378.00001883506775
+AudioEffectEnvelope      envelope1;      //xy=1080.5156593322754,365.00001883506775
+AudioMixer4              mix3;         //xy=1262.515625,588.9999974370003
+AudioOutputI2S           i2s2;           //xy=1406.515625,594.9999974370003
+AudioConnection          patchCord1(sound1, 0, mix1, 1);
+AudioConnection          patchCord2(sound0, 0, mix1, 0);
+AudioConnection          patchCord3(sound2, 0, mix1, 2);
+AudioConnection          patchCord4(sound3, 0, mix1, 3);
+AudioConnection          patchCord5(sound4, 0, mix2, 1);
+AudioConnection          patchCord6(mix1, 0, mix2, 0);
+AudioConnection          patchCord7(waveform1, 0, filter1, 0);
+AudioConnection          patchCord8(mix2, 0, mix3, 1);
+AudioConnection          patchCord9(filter1, 0, envelope1, 0);
+AudioConnection          patchCord10(envelope1, 0, mix3, 0);
+AudioConnection          patchCord11(mix3, 0, i2s2, 0);
+AudioConnection          patchCord12(mix3, 0, i2s2, 1);
+AudioControlSGTL5000     audioShield;    //xy=1397.515625,514.9999974370003
+// GUItool: end automatically generated code
+
+// GUItool: end automatically generated code
+
 // GUItool: end automatically generated code
 
 // MIDI SCALES 
@@ -104,37 +99,43 @@ int majorPentatonic[8] = {0, 2, 4, 7, 9, 12, 14, 16};  // major pentatonic
 int minorPentatonic[8] = {0, 3, 5, 7, 10, 12, 15, 17}; // minor pentatonic 
 int octaves[5] = {0, 12, 24, 36, 48}; // octaves
 
+float mapfloat(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 void setup() {
   AudioMemory(50);
       // turn on the output
   audioShield.enable();
   audioShield.volume(0.5);
-  mixer1.gain(0,0.3);
-  mixer1.gain(1,0.3);
-  mixer1.gain(2,0.3);
-  mixer2.gain(0,0.3);
-  mixer2.gain(1,0.3);
-  mixer2.gain(2,0.3);
-  mixer3.gain(0,0.3);
-  mixer3.gain(1,0.3);
-  mixer3.gain(2,0.3);
-  mix1.gain(0,0.25);
-  mix1.gain(1,0.25);
-  mix1.gain(2,0.25);
-  mix1.gain(3,0.25);
-  mix2.gain(0,0.5);
-  mix2.gain(1,0.5);
+  mix1.gain(0,0.25); // Drum ch. 1
+  mix1.gain(1,0.25); // Drum ch. 2
+  mix1.gain(2,0.25); // Drum ch. 3
+  mix1.gain(3,0.25); // Drum ch. 4
+  mix2.gain(0,0.5);  //  Drum mixer 1 daisy chain ==> drum mixer 2
+  mix2.gain(1,0.5);  // Drum ch. 5
+
+  mix3.gain(0,0.3); // Master mixer
+  mix3.gain(1,0.3); // Master mixer 
+  mix3.gain(2,0.3); // Master mixer 
 
 	Wire.begin();
 	Wire.setClock(400000);
 	pca9685_config(0x40);
 	mcp23017_config(0x20, 0xFFFF);
 
-  int sum = 0; 
+  int sensorSum1 = 0;       // Ross touch sensor 
   for (int x = 0; x < 50; x++){
-  sum = sum + touchRead(0);
+  sensorSum1 = sensorSum1 + touchRead(0);
   }
-  minimum = sum / 50; 
+  sensorMinimum1 = sensorSum1 / 50; 
+
+  waveform1.begin(0.5, 60, WAVEFORM_SQUARE); // Ross  
+  
+  envelope1.attack(5.0); // Ross 
+  envelope1.decay(100.0);
+  envelope1.sustain(1.0); 
 }
 
 void led(unsigned int lednum, unsigned int value)
@@ -227,51 +228,56 @@ void led_test(void)
 	i++;
 }
 
-void do_left_panel(void)
+void do_left_panel(void) // Ross's panel 
 {
-  // sinceTest1 = 0; 
-  
-  float touchSensor1 = (touchRead(0));
-  //touchSensor2 = (touchRead(1));
-  //touchSensor3 = (touchRead(30));  
-  //touchSensor4 = (touchRead(29));  
-  //touchSensor5 = (touchRead(16));
+  //float touchSensor2 = (touchRead(1));
+  //float touchSensor3 = (touchRead(30));  
+  //float touchSensor4 = (touchRead(29));  
+  //float touchSensor5 = (touchRead(16));
 
   //pot1Raw = (analogRead(33));
   //pot2Raw = (analogRead(31));
   //pot3Raw = (analogRead(32));  
 
-  // timeTaken = sinceTest1;
+  float touchSensor1 = (touchRead(0));
 
-  float difference = (touchSensor1 - minimum);
-  if (difference > 0){ 
-  smoothness = 3000; // "Attack time"
+  float sensorDifference1 = (touchSensor1 - sensorMinimum1);
+  if (sensorDifference1 > 0){ 
+  sensorSmoothness1 = 3000; // "Attack time"
   }
   else {
-  smoothness = 5; // "Release time" 
+  sensorSmoothness1 = 5; // "Release time" 
   }
-  minimum = minimum + (difference / smoothness);
+  sensorMinimum1 = sensorMinimum1 + (sensorDifference1 / sensorSmoothness1);
 
-  float scaledOutput = touchSensor1 - minimum;
+  float cleanSensorOutput1 = touchSensor1 - sensorMinimum1;
 
-  scaledOutput = max(scaledOutput, 0); 
+  cleanSensorOutput1 = max(cleanSensorOutput1, 0); // truncate lowest possible value to 0 
+  cleanSensorOutput1 = min(cleanSensorOutput1, 1200); // truncate highest possible value to 1200 
 
-  if (scaledOutput > 1000){
-  //envelope1.noteOn();
+  gate1[1] = gate1[0];
+
+  gate1[0] = cleanSensorOutput1 >= 500;
+
+  if (gate1[0]>gate1[1]){
+  envelope1.noteOn();
   }
-  else{
-  //envelope1.noteOff(); 
+  if (gate1[1]>gate1[0]){
+  envelope1.noteOff();
   }
-  
-  //Serial.print(timeTaken);
-  //Serial.print(",");
-  //Serial.print("<==elapsedMicros,"); 
+
+  filterCutoff1 = mapfloat(cleanSensorOutput1, 0, 1200, 0, 5000);
+
+  filter1.frequency(filterCutoff1);
+
   Serial.print(touchSensor1);
   Serial.print(",<==rawData,");
-  Serial.print(minimum);
+  Serial.print(sensorMinimum1);
   Serial.print("<==averageMinimum,");
-  Serial.print(scaledOutput);
+  Serial.print(cleanSensorOutput1);
   Serial.print("<==scaledOutput");
+  Serial.print(filterCutoff1);
+  Serial.print("<==filterCutoff1");
   /*
   Serial.print(touchSensor2);
   Serial.print(",");
@@ -290,7 +296,6 @@ void do_left_panel(void)
   */
   Serial.println();
 }
-
 
 void do_center_panel(void)
 {
