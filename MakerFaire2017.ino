@@ -5,35 +5,33 @@
 #include <SerialFlash.h>
 
 // GUItool: begin automatically generated code
-AudioSynthWaveform       waveform2;      //xy=220.515625,372.9999976158142
-AudioSynthWaveform       waveform3;      //xy=225.515625,470.9999976158142
-AudioSynthWaveform       waveform1;      //xy=227.515625,272.9999976158142
-AudioSynthWaveform       waveform4;      //xy=230.515625,570.9999976158142
-AudioSynthWaveform       waveform5;      //xy=231.515625,665.9999976158142
-AudioFilterStateVariable filter2;        //xy=355.515625,378.9999976158142
-AudioFilterStateVariable filter3;        //xy=360.515625,476.9999976158142
-AudioFilterStateVariable filter1;        //xy=362.515625,278.9999976158142
-AudioFilterStateVariable filter4;        //xy=365.515625,576.9999976158142
-AudioFilterStateVariable filter5;        //xy=366.515625,671.9999976158142
-AudioEffectEnvelope      envelope2;      //xy=490.515625,365.9999976158142
-AudioEffectEnvelope      envelope3;      //xy=495.515625,463.9999976158142
-AudioEffectEnvelope      envelope1;      //xy=497.515625,265.9999976158142
-AudioEffectEnvelope      envelope4;      //xy=500.515625,563.9999976158142
-AudioEffectEnvelope      envelope5;      //xy=501.515625,658.9999976158142
-AudioPlayMemory          sound1;         //xy=505.515625,796.9999976158142
-AudioPlayMemory          sound0;         //xy=506.515625,746.9999976158142
-AudioPlayMemory          sound2;         //xy=509.515625,842.9999976158142
-AudioPlayMemory          sound3;         //xy=512.515625,892.9999976158142
-AudioPlayMemory          sound4;         //xy=681.515625,886.9999976158142
-AudioMixer4              mix1;           //xy=687.515625,817.9999976158142
-AudioMixer4              mixer1;         //xy=699.515625,456.9999976158142
-AudioMixer4              mix2;           //xy=834.515625,835.9999976158142
-AudioMixer4              mixer2;         //xy=848.515625,476.9999976158142
-AudioSynthWaveformSine   sine1;          //xy=866.5158042907715,954.5156803131104
-AudioMixer4              mix3;           //xy=1029.515625,841.9999976158142
-AudioOutputI2S           i2s2;           //xy=1173.515625,847.9999976158142
-AudioOutputI2S           is23; //xy=2651.015625,814.515625
-AudioOutputI2S           is24;           //xy=2760.515625,1042.9999976158142
+AudioSynthWaveform       waveform2;      //xy=330.515625,330.515625
+AudioSynthWaveform       waveform3;      //xy=335.515625,428.515625
+AudioSynthWaveform       waveform1;      //xy=337.515625,230.515625
+AudioSynthWaveform       waveform4;      //xy=340.515625,528.515625
+AudioSynthWaveform       waveform5;      //xy=341.515625,623.515625
+AudioFilterStateVariable filter2;        //xy=465.515625,336.515625
+AudioFilterStateVariable filter3;        //xy=470.515625,434.515625
+AudioFilterStateVariable filter1;        //xy=472.515625,236.515625
+AudioFilterStateVariable filter4;        //xy=475.515625,534.515625
+AudioFilterStateVariable filter5;        //xy=476.515625,629.515625
+AudioEffectEnvelope      envelope2;      //xy=600.515625,323.515625
+AudioEffectEnvelope      envelope3;      //xy=605.515625,421.515625
+AudioEffectEnvelope      envelope1;      //xy=607.515625,223.515625
+AudioEffectEnvelope      envelope4;      //xy=610.515625,521.515625
+AudioEffectEnvelope      envelope5;      //xy=611.515625,616.515625
+AudioPlayMemory          sound1;         //xy=615.515625,754.515625
+AudioPlayMemory          sound0;         //xy=616.515625,704.515625
+AudioPlayMemory          sound2;         //xy=619.515625,800.515625
+AudioPlayMemory          sound3;         //xy=622.515625,850.515625
+AudioPlayMemory          sound4;         //xy=791.515625,844.515625
+AudioMixer4              mix1;           //xy=797.515625,775.515625
+AudioMixer4              mixer1;         //xy=809.515625,414.515625
+AudioMixer4              mix2;           //xy=944.515625,793.515625
+AudioMixer4              mixer2;         //xy=958.515625,434.515625
+AudioSynthWaveformSine   sine1;          //xy=976.515625,912.515625
+AudioMixer4              mix3;           //xy=1139.515625,799.515625
+AudioOutputI2S           i2s2;           //xy=1283.515625,805.515625
 AudioConnection          patchCord1(waveform2, 0, filter2, 0);
 AudioConnection          patchCord2(waveform3, 0, filter3, 0);
 AudioConnection          patchCord3(waveform1, 0, filter1, 0);
@@ -61,7 +59,7 @@ AudioConnection          patchCord24(mixer2, 0, mix3, 0);
 AudioConnection          patchCord25(sine1, 0, mix3, 3);
 AudioConnection          patchCord26(mix3, 0, i2s2, 0);
 AudioConnection          patchCord27(mix3, 0, i2s2, 1);
-AudioControlSGTL5000     audioShield;    //xy=1221.5156860351562,737.0000238418579
+AudioControlSGTL5000     audioShield;    //xy=1331.515625,695.515625
 // GUItool: end automatically generated code
 
 #include <stdint.h>  //touchscreeen
@@ -203,7 +201,7 @@ void setup() {
   mix3.gain(0, 0.25); // Ross
   mix3.gain(1, 0.25); // Ben
   mix3.gain(2, 0.25); // Darcy
-  mix3.gain(3, 0.25); // Test Oscillator
+  mix3.gain(3, 0.0); // Test Oscillator
     
   // ROSS SETUP
   int sensorSum1 = 0;
