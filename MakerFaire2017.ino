@@ -68,7 +68,7 @@ AudioControlSGTL5000     audioShield;    //xy=1055.5156517028809,539.00001239776
 #define YP A3  // must be an analog pin, use "An" notation!
 #define XM A4  // must be an analog pin, use "An" notation!
 #define YM 8   // can be a digital pin
-#define XP 9   // can be a digital pin
+#define XP 10   // can be a digital pin
 //#define TsPot1 A5 //
 //#define TsPot2 A6 //
 //#define TsPot3 A7 //
