@@ -68,13 +68,14 @@ AudioControlSGTL5000     audioShield;    //xy=1221.5156860351562,737.00002384185
 #include "TouchScreen.h"
 
 // These are the pins for the touchscreen
-#define YP A3  // must be an analog pin, use "An" notation!
-#define XM A4  // must be an analog pin, use "An" notation!
+#define YP A6  // must be an analog pin, use "An" notation!
+#define XM A7  // must be an analog pin, use "An" notation!
 #define YM 8   // can be a digital pin
 #define XP 10   // can be a digital pin
-//#define TsPot1 A5 //
-//#define TsPot2 A6 //
-//#define TsPot3 A7 //
+#define TsPot1 A18 ///
+#define TsPot2 A19 //
+#define TsPot3 A20 //
+
 int TsPot1Val = 0;
 int TsPot2Val = 0;
 int TsPot3Val = 0;
@@ -774,13 +775,12 @@ void do_center_panel(void)
 
 void do_right_panel(void)   // touch panel synth stuff goes here
 {
-  /*
     TsPot1Val = analogRead(TsPot1);
     TsPot2Val = analogRead(TsPot2);
     TsPot3Val = analogRead(TsPot3);
 
     TSPoint p = ts.getPoint();    // a point object holds x y and z coordinates
-
+   /*
     if (p.z > ts.pressureThreshhold) {  //we have some minimum pressure we consider 'valid' .... pressure of 0 means no pressing!
     Serial.print("X = "); Serial.print(p.x);
     Serial.print("\tY = "); Serial.print(p.y);
@@ -792,7 +792,7 @@ void do_right_panel(void)   // touch panel synth stuff goes here
     Serial.print("Pot3Val = ");  Serial.println(TsPot3Val);
 
     //  delay(100);
-  */
+   */
 }
 
 
