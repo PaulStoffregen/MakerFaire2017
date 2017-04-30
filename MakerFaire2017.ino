@@ -999,7 +999,7 @@ void do_center_panel(void)
 	float diff;
 	diff = analogRead(A16) - tempo;
 	tempo = tempo + diff / 4;
-	tempo = (tempo / 8) + 20;
+	tempo = (tempo / 4) + 20;
 	if (sinceTempo >= (15000 / tempo))
 	{
 if(stepCount%256==0)
