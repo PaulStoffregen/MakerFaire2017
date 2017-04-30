@@ -134,9 +134,10 @@ AudioControlSGTL5000     audioShield;    //xy=1915.5,1977.25
 #define XM A7  // must be an analog pin, use "An" notation!
 #define YM 8   // can be a digital pin
 #define XP 10   // can be a digital pin
-#define TsPot1 A18 // 
+//#define TsPot1 A18 //  using A18 for noteSelect in DRCs code 
 #define TsPot2 A19 // 
 #define selectionPin A20 // 
+//A16 tempo pot  using A17 for DRC test sketch
 Bounce buttonA = Bounce(1, 8); // pin,debouncetime
 Bounce buttonB = Bounce(2, 8); 
 Bounce buttonC = Bounce(3, 8);
@@ -269,7 +270,7 @@ void setup() {
 
   // Test Oscillator
   sine1.amplitude(0.5); 
-  sine1.frequency(440); 
+  //sine1.frequency(440); 
 
   // Wire
   Wire.begin();
@@ -289,7 +290,7 @@ void setup() {
   mix3.gain(0, 0.25); // Ross
   mix3.gain(1, 0.25); // Ben
   mix3.gain(2, 0.25); // Darcy
-  mix3.gain(3, 0.0); // Test Oscillator
+  mix3.gain(3, 0); // Test Oscillator  //connected to DRC test scales
     
   // ROSS SETUP
   int sensorSum1 = 0;
@@ -598,13 +599,14 @@ void led_test(void)
 
 void do_left_panel(void) // Ross's panel
 {
-  // CHORD SELECTION
+  // CHORD SELECTION  // DRC could be used for controlling scales with pushbuttons currently changed at random
+ /*
   if (transposeClock >= 60000) {  // one minute
     chordSelect = random(9);
     transpose = random(-12, 12);
     transposeClock = 0;
   }
-
+*/
   // PWM
   pw = mapfloat(analogRead(32), 0, 1023, 0.0, 1.0);
 
@@ -615,7 +617,7 @@ void do_left_panel(void) // Ross's panel
   waveform5.pulseWidth(pw);
 
   switch (chordSelect) {
-
+// DRC chordSelect determined by random clock or could be assigned to buttons
     // MAJ
     case 1:
       chord[0] = 0;
@@ -812,6 +814,7 @@ void do_left_panel(void) // Ross's panel
   cleanSensorOutput5 = min(cleanSensorOutput5, 1200); // truncate highest possible value to 1200
 
   // Comparators
+  //DRC cleanSensorOutputX triggers the threshold so it always begins playing the tone in tempo with the BPM
 
   int thresh = 1000; // global threshold
 
@@ -833,7 +836,7 @@ void do_left_panel(void) // Ross's panel
   // Divide
   divide = map(analogRead(31), 0, 1023, 8, 1); // Division amounts
 
-  if (stepCount % divide == 0) {
+  if (stepCount % divide == 0) {  //DRC this state flips back and forth and references stepCount tempo to keep notes in time with BPM
     gate1[1] = 0;
     gate2[1] = 0;
     gate3[1] = 0;
@@ -978,7 +981,7 @@ void do_left_panel(void) // Ross's panel
   envelope5.decay(decayTime);
 }
 
-void do_center_panel(void)
+void do_center_panel(void)  //Bens Sequencer
 {
 	lastOn=totalOn;
 	totalOn=0;
@@ -996,7 +999,7 @@ void do_center_panel(void)
 		}		
 	}
 	float diff;
-	diff = analogRead(A16) - tempo;
+	diff = analogRead(A17) - tempo;  //was A16, changed to A17 for DRC test
 	tempo = tempo + diff / 4;
 	tempo = (tempo / 2) + 20;
 	if (sinceTempo >= (15000 / tempo))
@@ -1128,13 +1131,40 @@ if(stepCount/2%256==0)
 }
 
 
-void do_right_panel(void)   // touch panel synth stuff goes here
+void do_right_panel(void)   // DRC touch panel synth stuff goes here
 {
-  Pot1 = analogRead(TsPot1);
+  //Pot1 = analogRead(TsPot1);
   Pot2 = analogRead(TsPot2);
   selectionValue = analogRead(selectionPin);  //this is used to select the different synth options in lieu of a button/rotary interaface.
   TSPoint p;
   p = ts.getPoint();    // a point object holds p.x, p.y, and p.z coordinates
+
+ // THIS IS THE PART YOU SHOULD ADD TO YOUR CODE 
+  int noteSelect = map(analogRead(A18), 0, 1023, 0, 19);
+
+  scale[0] = chord[0];
+  scale[1] = chord[1];
+  scale[2] = chord[2];
+  scale[3] = chord[3];
+  scale[4] = chord[4];
+  scale[5] = chord[0] + 12;
+  scale[6] = chord[1] + 12;
+  scale[7] = chord[2] + 12;
+  scale[8] = chord[3] + 12;
+  scale[9] = chord[4] + 12;
+  scale[10] = chord[0] + 24;
+  scale[11] = chord[1] + 24;
+  scale[12] = chord[2] + 24;
+  scale[13] = chord[3] + 24;
+  scale[14] = chord[4] + 24;
+  scale[15] = chord[0] + 36;
+  scale[16] = chord[1] + 36;
+  scale[17] = chord[2] + 36;
+  scale[18] = chord[3] + 36;
+  scale[19] = chord[4] + 36;
+  
+  sine1.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+
 
   if (selectionValue > 0 && selectionValue < 256) { //GUITAR w/ distortion patch: string1&2 > bitcrusher1
     //noteOn(frequency, velocity(0-1)); noteOff(velocity); //bits(xcrushBits(1-16)); 16=clean sampleRate(xsampleRate);
@@ -1210,16 +1240,17 @@ void do_right_panel(void)   // touch panel synth stuff goes here
     //waveform8.frequency(freq);
     //waveformX.pulseWidth(amount); ??
 
+    //envelope6
 
     //filter8.frequency(freq); corner freq when input control signal is zero
     //filter8.resonance(Q); .7 - 5.0 attenuate beforehand to prevent clipping
     //filter8.octaveControl(octaves); 0-7 octave range. sets attenuation range for filters corner frequency.
+    //frequency mod waveform filter
     //waveform13.begin(level, 130.81, WAVEFORM_SINE); //C3
     //waveform13.frequency(freq);
 
 
   } else if (selectionValue > 513 && selectionValue < 768) { //waveform chord mixer waveform 1&2 > envelope1 > out
-    //waveform11 & 12 > mixer7 > fade3 > env3...waveform1&2 > mixer3 > fade1 > env1
     Serial.println("Waveform Chord mixer");
     mixer11.gain(1, 1); //set gain for other channels;
     mixer11.gain(2, 1);
