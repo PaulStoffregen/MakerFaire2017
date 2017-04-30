@@ -151,6 +151,8 @@ float pw = 0;
 
 int chordSelect = 0;
 int chord[5] = {0, 0, 0, 0, 0};
+int scale[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int noteSelect = 0; 
 
 int baseOctave = 0;
 int transpose = 0;
