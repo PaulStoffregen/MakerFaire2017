@@ -3,88 +3,150 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
-
-// GUItool: begin automatically generated code
-AudioSynthWaveform       waveform2;      //xy=330.515625,330.515625
-AudioSynthWaveform       waveform3;      //xy=335.515625,428.515625
-AudioSynthWaveform       waveform1;      //xy=337.515625,230.515625
-AudioSynthWaveform       waveform4;      //xy=340.515625,528.515625
-AudioSynthWaveform       waveform5;      //xy=341.515625,623.515625
-AudioFilterStateVariable filter2;        //xy=465.515625,336.515625
-AudioFilterStateVariable filter3;        //xy=470.515625,434.515625
-AudioFilterStateVariable filter1;        //xy=472.515625,236.515625
-AudioFilterStateVariable filter4;        //xy=475.515625,534.515625
-AudioFilterStateVariable filter5;        //xy=476.515625,629.515625
-AudioEffectEnvelope      envelope2;      //xy=600.515625,323.515625
-AudioEffectEnvelope      envelope3;      //xy=605.515625,421.515625
-AudioEffectEnvelope      envelope1;      //xy=607.515625,223.515625
-AudioEffectEnvelope      envelope4;      //xy=610.515625,521.515625
-AudioEffectEnvelope      envelope5;      //xy=611.515625,616.515625
-AudioPlayMemory          sound1;         //xy=615.515625,754.515625
-AudioPlayMemory          sound0;         //xy=616.515625,704.515625
-AudioPlayMemory          sound2;         //xy=619.515625,800.515625
-AudioPlayMemory          sound3;         //xy=622.515625,850.515625
-AudioPlayMemory          sound4;         //xy=791.515625,844.515625
-AudioMixer4              mix1;           //xy=797.515625,775.515625
-AudioMixer4              mixer1;         //xy=809.515625,414.515625
-AudioMixer4              mix2;           //xy=944.515625,793.515625
-AudioMixer4              mixer2;         //xy=958.515625,434.515625
-AudioSynthWaveformSine   sine1;          //xy=976.515625,912.515625
-AudioMixer4              mix3;           //xy=1139.515625,799.515625
-AudioOutputI2S           i2s2;           //xy=1283.515625,805.515625
-AudioConnection          patchCord1(waveform2, 0, filter2, 0);
-AudioConnection          patchCord2(waveform3, 0, filter3, 0);
-AudioConnection          patchCord3(waveform1, 0, filter1, 0);
-AudioConnection          patchCord4(waveform4, 0, filter4, 0);
-AudioConnection          patchCord5(waveform5, 0, filter5, 0);
-AudioConnection          patchCord6(filter2, 0, envelope2, 0);
-AudioConnection          patchCord7(filter3, 0, envelope3, 0);
-AudioConnection          patchCord8(filter1, 0, envelope1, 0);
-AudioConnection          patchCord9(filter4, 0, envelope4, 0);
-AudioConnection          patchCord10(filter5, 0, envelope5, 0);
-AudioConnection          patchCord11(envelope2, 0, mixer1, 1);
-AudioConnection          patchCord12(envelope3, 0, mixer1, 2);
-AudioConnection          patchCord13(envelope1, 0, mixer1, 0);
-AudioConnection          patchCord14(envelope4, 0, mixer1, 3);
-AudioConnection          patchCord15(envelope5, 0, mixer2, 1);
-AudioConnection          patchCord16(sound1, 0, mix1, 1);
-AudioConnection          patchCord17(sound0, 0, mix1, 0);
-AudioConnection          patchCord18(sound2, 0, mix1, 2);
-AudioConnection          patchCord19(sound3, 0, mix1, 3);
-AudioConnection          patchCord20(sound4, 0, mix2, 1);
-AudioConnection          patchCord21(mix1, 0, mix2, 0);
-AudioConnection          patchCord22(mixer1, 0, mixer2, 0);
-AudioConnection          patchCord23(mix2, 0, mix3, 1);
-AudioConnection          patchCord24(mixer2, 0, mix3, 0);
-AudioConnection          patchCord25(sine1, 0, mix3, 3);
-AudioConnection          patchCord26(mix3, 0, i2s2, 0);
-AudioConnection          patchCord27(mix3, 0, i2s2, 1);
-AudioControlSGTL5000     audioShield;    //xy=1331.515625,695.515625
-// GUItool: end automatically generated code
-
 #include <stdint.h>  //touchscreeen
 #include "TouchScreen.h"
+#include <Bounce.h>
+// GUItool: begin automatically generated code
+AudioSynthWaveform       waveform9;      //xy=655.2499923706055,2536.000099182129
+AudioSynthWaveform       waveform10; //xy=658.2499923706055,2499.000099182129
+AudioSynthWaveform       waveform6; //xy=661.2500038146973,2249.000349998474
+AudioSynthWaveform       waveform8; //xy=663.25,2292.000228881836
+AudioSynthWaveform       waveform7;      //xy=663.2500038146973,2335.000442504883
+AudioSynthWaveform       waveform11; //xy=669.2499923706055,2409.000099182129
+AudioSynthWaveform       waveform12; //xy=670.2499923706055,2445.000099182129
+AudioMixer4              mixer7;         //xy=828.2499923706055,2521.000099182129
+AudioMixer4              mixer3;         //xy=837.2499923706055,2447.000099182129
+AudioSynthWaveform       waveform14;      //xy=850.75,2604.25
+AudioMixer4              mixer4;         //xy=869.2499885559082,2314.0001068115234
+AudioSynthWaveform       waveform2;      //xy=914.5,1612.25
+AudioSynthWaveform       waveform3;      //xy=919.5,1710.25
+AudioSynthWaveform       waveform1;      //xy=921.5,1512.25
+AudioSynthWaveform       waveform4;      //xy=924.5,1810.25
+AudioSynthWaveform       waveform5;      //xy=925.5,1905.25
+AudioFilterStateVariable filter6;        //xy=988.5000076293945,2457.25013923645
+AudioFilterStateVariable filter7;        //xy=992.500114440918,2532.250141143799
+AudioSynthKarplusStrong  string2;        //xy=1022.2499923706055,2256.000099182129
+AudioSynthKarplusStrong  string1;        //xy=1025.2499923706055,2220.000099182129
+AudioFilterStateVariable filter2;        //xy=1049.5,1618.25
+AudioEffectEnvelope      envelope6; //xy=1049.2499923706055,2327.000099182129
+AudioFilterStateVariable filter3;        //xy=1054.5,1716.25
+AudioFilterStateVariable filter1;        //xy=1056.5,1518.25
+AudioFilterStateVariable filter4;        //xy=1059.5,1816.25
+AudioFilterStateVariable filter5;        //xy=1060.5,1911.25
+AudioSynthWaveform       waveform13;      //xy=1072.2499923706055,2393.000099182129
+AudioEffectEnvelope      envelope7; //xy=1153.2499923706055,2483.000099182129
+AudioEffectEnvelope      envelope8; //xy=1153.2499923706055,2531.000099182129
+AudioMixer4              mixer6;         //xy=1173.2499923706055,2240.000099182129
+AudioEffectEnvelope      envelope2;      //xy=1184.5,1605.25
+AudioEffectEnvelope      envelope3;      //xy=1189.5,1703.25
+AudioEffectEnvelope      envelope1;      //xy=1191.5,1505.25
+AudioEffectEnvelope      envelope4;      //xy=1194.5,1803.25
+AudioEffectEnvelope      envelope5;      //xy=1195.5,1898.25
+AudioFilterStateVariable filter8;        //xy=1194.7500343322754,2336.000066757202
+AudioPlayMemory          sound1;         //xy=1199.5,2036.25
+AudioPlayMemory          sound0;         //xy=1200.5,1986.25
+AudioPlayMemory          sound2;         //xy=1203.5,2082.25
+AudioPlayMemory          sound3;         //xy=1206.5,2132.25
+AudioEffectBitcrusher    bitcrusher1;    //xy=1313.250015258789,2248.000196456909
+AudioMixer4              mixer12;        //xy=1340.2499923706055,2344.000099182129
+AudioMixer4              mixer11;        //xy=1343.2499923706055,2508.000099182129
+AudioPlayMemory          sound4;         //xy=1375.5,2126.25
+AudioMixer4              mix1;           //xy=1381.5,2057.25
+AudioMixer4              mixer1;         //xy=1393.5,1696.25
+AudioMixer4              mixer9;         //xy=1461.2499923706055,2280.000099182129
+AudioMixer4              mix2;           //xy=1528.5,2075.25
+AudioSynthWaveformSine   sine1;          //xy=1532.5000534057617,2152.250062942505
+AudioMixer4              mixer2;         //xy=1542.5,1716.25
+AudioMixer4              mixer13; //xy=1568.2499923706055,2387.000099182129
+AudioMixer4              mix3;           //xy=1723.5,2081.25
+AudioOutputI2S           i2s2;           //xy=1867.5,2087.25
+AudioConnection          patchCord1(waveform9, 0, mixer7, 2);
+AudioConnection          patchCord2(waveform10, 0, mixer7, 1);
+AudioConnection          patchCord3(waveform6, 0, mixer4, 0);
+AudioConnection          patchCord4(waveform8, 0, mixer4, 1);
+AudioConnection          patchCord5(waveform7, 0, mixer4, 2);
+AudioConnection          patchCord6(waveform11, 0, mixer3, 1);
+AudioConnection          patchCord7(waveform12, 0, mixer3, 2);
+AudioConnection          patchCord8(mixer7, 0, filter7, 0);
+AudioConnection          patchCord9(mixer3, 0, filter6, 0);
+AudioConnection          patchCord10(waveform14, 0, filter6, 1);
+AudioConnection          patchCord11(waveform14, 0, filter7, 1);
+AudioConnection          patchCord12(mixer4, 0, envelope6, 0); //(mixer4, 3f59f935.4ccb76);
+AudioConnection          patchCord13(waveform2, 0, filter2, 0);
+AudioConnection          patchCord14(waveform3, 0, filter3, 0);
+AudioConnection          patchCord15(waveform1, 0, filter1, 0);
+AudioConnection          patchCord16(waveform4, 0, filter4, 0);
+AudioConnection          patchCord17(waveform5, 0, filter5, 0);
+AudioConnection          patchCord18(filter6, 0, envelope7, 0);
+AudioConnection          patchCord19(filter7, 0, envelope8, 0);
+AudioConnection          patchCord20(string2, 0, mixer6, 1);
+AudioConnection          patchCord21(string1, 0, mixer6, 0);
+AudioConnection          patchCord22(filter2, 0, envelope2, 0);
+AudioConnection          patchCord23(envelope6, 0, filter8, 0);
+AudioConnection          patchCord24(filter3, 0, envelope3, 0);
+AudioConnection          patchCord25(filter1, 0, envelope1, 0);
+AudioConnection          patchCord26(filter4, 0, envelope4, 0);
+AudioConnection          patchCord27(filter5, 0, envelope5, 0);
+AudioConnection          patchCord28(waveform13, 0, filter8, 1);
+AudioConnection          patchCord29(envelope7, 0, mixer11, 1);
+AudioConnection          patchCord30(envelope8, 0, mixer11, 2);
+AudioConnection          patchCord31(mixer6, bitcrusher1);
+AudioConnection          patchCord32(envelope2, 0, mixer1, 1);
+AudioConnection          patchCord33(envelope3, 0, mixer1, 2);
+AudioConnection          patchCord34(envelope1, 0, mixer1, 0);
+AudioConnection          patchCord35(envelope4, 0, mixer1, 3);
+AudioConnection          patchCord36(envelope5, 0, mixer2, 1);
+AudioConnection          patchCord37(filter8, 0, mixer12, 0);
+AudioConnection          patchCord38(filter8, 1, mixer12, 1);
+AudioConnection          patchCord39(filter8, 2, mixer12, 2);
+AudioConnection          patchCord40(sound1, 0, mix1, 1);
+AudioConnection          patchCord41(sound0, 0, mix1, 0);
+AudioConnection          patchCord42(sound2, 0, mix1, 2);
+AudioConnection          patchCord43(sound3, 0, mix1, 3);
+AudioConnection          patchCord44(bitcrusher1, 0, mixer9, 2);
+AudioConnection          patchCord45(mixer12, 0, mixer13, 1);
+AudioConnection          patchCord46(mixer11, 0, mixer13, 2);
+AudioConnection          patchCord47(sound4, 0, mix2, 1);
+AudioConnection          patchCord48(mix1, 0, mix2, 0);
+AudioConnection          patchCord49(mixer1, 0, mixer2, 0);
+AudioConnection          patchCord50(mixer9, 0, mixer13, 0);
+AudioConnection          patchCord51(mix2, 0, mix3, 1);
+AudioConnection          patchCord52(sine1, 0, mix3, 3);
+AudioConnection          patchCord53(mixer2, 0, mix3, 0);
+AudioConnection          patchCord54(mixer13, 0, mix3, 2);
+AudioConnection          patchCord55(mix3, 0, i2s2, 0);
+AudioConnection          patchCord56(mix3, 0, i2s2, 1);
+AudioControlSGTL5000     audioShield;    //xy=1915.5,1977.25
+// GUItool: end automatically generated code
 
-// These are the pins for the touchscreen
+// Darcys Touchscreen Pins and Buttons
 #define YP A6  // must be an analog pin, use "An" notation!
 #define XM A7  // must be an analog pin, use "An" notation!
 #define YM 8   // can be a digital pin
 #define XP 10   // can be a digital pin
-#define TsPot1 A18 ///
-#define TsPot2 A19 //
-#define TsPot3 A20 //
-
-int TsPot1Val = 0;
-int TsPot2Val = 0;
-int TsPot3Val = 0;
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);  //use a multimeter to read the resistance between X+ and X- and replace value which is currently 300.
+#define TsPot1 A18 // 
+#define TsPot2 A19 // 
+#define selectionPin A20 // 
+Bounce buttonA = Bounce(1, 8); // pin,debouncetime
+Bounce buttonB = Bounce(2, 8); 
+Bounce buttonC = Bounce(3, 8);
+Bounce buttonD = Bounce(4, 8);
+Bounce buttonE = Bounce(5, 8);
+//use pinMode(10, INPUT_PULLUP); for buttons //if(buttonA.fallingEdge()) { }
+int Pot1 = 0;
+int Pot2 = 0;
+int selectionValue = 0;
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 370);  //use a multimeter to read the resistance between X+ and X- and replace value which is currently 300.
+//Boolean trigger for darcy to use BPM to trigger notes
+bool noteTrig = false;
+//End of Darcys Touchscreen 
 
 // Global Clock
 elapsedMillis sinceTempo;
 int tempo = 120;
 int stepCount;
 
-// ALL STUFF FOR ROSS'S PANEL
+// Ross' Capsense Panel and Midi quantizing
 elapsedMillis transposeClock;
 elapsedMillis buttonDebounce1;
 elapsedMillis buttonDebounce2;
@@ -288,7 +350,38 @@ void setup() {
 
   pinMode(2, INPUT);
   pinMode(3, INPUT);
+
+//Darcys Touchscreen Stuff
+  //mixer2.gain(0, 1);
+  mixer3.gain(1, 1);
+  mixer3.gain(2, 1);
+
+  mixer4.gain(0, 1);
+  mixer4.gain(1, 1);
+  mixer4.gain(2, 1);
+
+  mixer6.gain(0, 1);
+  mixer6.gain(1, 1);
+
+  mixer7.gain(1, 1);
+  mixer7.gain(2, 1);
+
+  mixer13.gain(0, 1);
+  mixer13.gain(1, 1);
+  mixer13.gain(2, 1);
+
+  //mixer9.gain(0, 1);
+  //mixer11.gain(0, 1);
+  //mixer12.gain(0, 1); 
 }
+
+
+void rightTrigger() {
+  noteTrig = true;
+  // Ben's sequencer calls this
+}
+
+
 
 void led(unsigned int lednum, unsigned int value)
 {
@@ -365,6 +458,12 @@ void loop() {
   do_right_panel();
   led_test();
   buttons_update();
+  delay(1);
+  static elapsedMillis triggermillis;
+  if (triggermillis > 500) {
+    rightTrigger();
+    triggermillis -= 500;
+  }
 }
 
 
@@ -775,29 +874,139 @@ void do_center_panel(void)
 
 void do_right_panel(void)   // touch panel synth stuff goes here
 {
-    TsPot1Val = analogRead(TsPot1);
-    TsPot2Val = analogRead(TsPot2);
-    TsPot3Val = analogRead(TsPot3);
+  Pot1 = analogRead(TsPot1);
+  Pot2 = analogRead(TsPot2);
+  selectionValue = analogRead(selectionPin);  //this is used to select the different synth options in lieu of a button/rotary interaface.
+  TSPoint p;
+  p = ts.getPoint();    // a point object holds p.x, p.y, and p.z coordinates
 
-    TSPoint p = ts.getPoint();    // a point object holds x y and z coordinates
-   /*
-    if (p.z > ts.pressureThreshhold) {  //we have some minimum pressure we consider 'valid' .... pressure of 0 means no pressing!
-    Serial.print("X = "); Serial.print(p.x);
-    Serial.print("\tY = "); Serial.print(p.y);
-    Serial.print("\tPressure = "); Serial.println(p.z);
+  if (selectionValue > 0 && selectionValue < 256) { //GUITAR w/ distortion patch: string1&2 > bitcrusher1
+    //noteOn(frequency, velocity(0-1)); noteOff(velocity); //bits(xcrushBits(1-16)); 16=clean sampleRate(xsampleRate);
+    Serial.println("Guitar ");
+
+    //X mapped to guitar range...implement Ross Midi note selector for this
+    //int constX = constrain(p.x, 60, 950);
+    //int mappedX = map(constX, 60, 950, 0, 360);
+    //Serial.print ("mappedX = "); Serial.println(mappedX);
+    Serial.print ("p.x = "); Serial.print(p.x);
+    //Y mapped for bitcrushing
+    int constY = constrain(p.y, 97, 910);
+    int BitsMappedY = map(constY, 97, 910, 1, 16);
+    int sRateMappedY = map(constY, 97, 910,  1, 44100);
+    Serial.print ("constY = "); Serial.println(constY);
+
+    mixer9.gain(2, 1);
+    bitcrusher1.bits(16);
+    bitcrusher1.sampleRate(44100);
+    //bitcrusher1.bits(BitsMappedY);
+    //bitcrusher1.sampleRate(sRateMappedY);
+    //string2. if needed
+
+    //string object needs to be triggered once...currently being retriggered too often.  merge with master code for noteTrig bool to work
+    if (p.x > 60) {                     //X
+      if (p.x > 60 && p.x < 356) {
+        if (noteTrig == true) {
+    //      string1.noteOn(NOTE_C3, 1);
+        } //C3
+        Serial.print("C3");
+      }
+
+      if (p.x > 357 && p.x < 600) {
+        if (noteTrig == true) {
+     //     string1.noteOn(NOTE_G3, 1);
+        } //G3
+        Serial.print("G3");
+      }
+
+      if (p.x > 601 && p.x < 356) {
+        if (noteTrig == true) {
+     //     string1.noteOn(NOTE_C4, 1);
+        } //C4
+
+        Serial.print("C4");
+      }
+      noteTrig == false;
+
     }
-    //add if statement to only print if val change...
-    Serial.print("Pot1Val = ");  Serial.print(TsPot1Val);
-    Serial.print("Pot2Val = ");  Serial.print(TsPot2Val);
-    Serial.print("Pot3Val = ");  Serial.println(TsPot3Val);
+  }
 
-    //  delay(100);
-   */
+  else if (selectionValue > 257 && selectionValue < 512) { //waveform LPF & HPF mixer: waveform4,5,6 > envelope2 > filter2 w/ waveform7 input >
+    Serial.println("Waveform & Filter");
+    mixer12.gain(0, 1); //set gain for other channels
+    mixer12.gain(1, 1);
+    mixer12.gain(2, 1);
+
+    //X mapped for waveforms
+    int constX = constrain(p.x, 60, 950);
+    int mappedX = map(constX, 60, 950, 28, 3186);  //mapped to piano freq range
+    //Serial.print ("mappedX = "); Serial.print(mappedX);
+
+    //Y mapped for LPF/HPF controlled by waveform input: F = Fcenter * 2^(signal * octaves)
+    int constY = constrain(p.y, 97, 910);
+    int mappedY = map(constY, 97, 910, 28, 3186);
+    //Serial.print ("mappedY = "); Serial.println(mappedY);
+
+    waveform6.begin(1.0, 130.81, WAVEFORM_SINE); //C3
+    waveform7.begin(1.0, 130.81, WAVEFORM_TRIANGLE); //C3
+    waveform8.begin(1.0, 261.63, WAVEFORM_SINE); //C4
+    //waveform6.frequency(freq);
+    //waveform7.frequency(freq);
+    //waveform8.frequency(freq);
+    //waveformX.pulseWidth(amount); ??
+
+
+    //filter8.frequency(freq); corner freq when input control signal is zero
+    //filter8.resonance(Q); .7 - 5.0 attenuate beforehand to prevent clipping
+    //filter8.octaveControl(octaves); 0-7 octave range. sets attenuation range for filters corner frequency.
+    //waveform13.begin(level, 130.81, WAVEFORM_SINE); //C3
+    //waveform13.frequency(freq);
+
+
+  } else if (selectionValue > 513 && selectionValue < 768) { //waveform chord mixer waveform 1&2 > envelope1 > out
+    //waveform11 & 12 > mixer7 > fade3 > env3...waveform1&2 > mixer3 > fade1 > env1
+    Serial.println("Waveform Chord mixer");
+    mixer11.gain(1, 1); //set gain for other channels;
+    mixer11.gain(2, 1);
+    int constX = constrain(p.x, 60, 950);
+    int mappedX = map(constX, 60, 950, 28, 3186);  //mapped to piano freq range
+    //Serial.print ("mappedX = "); Serial.print(mappedX);
+
+    int constY = constrain(p.y, 97, 910);
+    int mappedY = map(constY, 97, 910, 28, 3186);
+    //Serial.print ("mappedY = "); Serial.println(mappedY);
+    //delay(100);
+
+    if (p.x > 60) { //begin playing when touched
+
+      waveform11.begin(1.0, 130.81, WAVEFORM_SINE); //C3
+      waveform12.begin(1.0, 261.63, WAVEFORM_TRIANGLE); //C4
+      waveform11.frequency(mappedX);
+      waveform12.frequency(mappedX);
+    //filter6.frequency(freq); corner freq when input control signal is zero
+    //filter6.resonance(Q); .7 - 5.0 attenuate beforehand to prevent clipping
+    //filter6.octaveControl(octaves); 0-7 octave range. sets attenuation range for filters corner frequency.
+    //filter7.frequency(freq); corner freq when input control signal is zero
+    //filter7.resonance(Q); .7 - 5.0 attenuate beforehand to prevent clipping
+    //filter7.octaveControl(octaves); 0-7 octave range. sets attenuation range for filters corner frequency.
+  
+      envelope7.noteOn();
+      envelope7.delay(0);
+      envelope7.hold(0);
+      waveform1.begin(1.0, 196.00, WAVEFORM_SQUARE); //G3
+      waveform2.begin(1.0, 392.00, WAVEFORM_TRIANGLE); //G4
+      waveform1.frequency(mappedY);
+      waveform2.frequency(mappedY);
+
+      envelope1.noteOn();
+      envelope1.delay(0);
+      envelope1.hold(0);
+      //remove fade and/or envelope
+
+
+    }
+
+  } 
 }
-
-
-
-
 
 
 
