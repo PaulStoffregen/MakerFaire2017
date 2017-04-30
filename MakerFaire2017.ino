@@ -565,12 +565,11 @@ void buttons_update(void)
 
 void loop() {
 		GPIOOnline=1;
+		  led_test();
+  buttons_update();
   do_center_panel();
   do_left_panel();
   do_right_panel();
-  led_test();
-  buttons_update();
-  delay(1);
   static elapsedMillis triggermillis;
   if (triggermillis > 500) {
     rightTrigger();
@@ -583,7 +582,7 @@ void led_test(void)
 {
  for (int x = 0; x < 40; x++)
 	{
-		if (x % 8 == stepCount % 8)
+		if (x % 8 == stepCount/2 % 8)
 		{
 			led(x, 1000);
 		}
@@ -999,10 +998,10 @@ void do_center_panel(void)
 	float diff;
 	diff = analogRead(A16) - tempo;
 	tempo = tempo + diff / 4;
-	tempo = (tempo / 4) + 20;
+	tempo = (tempo / 2) + 20;
 	if (sinceTempo >= (15000 / tempo))
 	{
-if(stepCount%256==0)
+if(stepCount/2%256==0)
 {
 	    int randomSample;
 		selectedSample[randomSample]=random(2);
@@ -1063,7 +1062,7 @@ if(stepCount%256==0)
 		//leftTrigger();
 		//rightTrigger();
 		stepCount++;
-		if (bitRead(row[0], stepCount % 8))
+		if (bitRead(row[0], stepCount/2 % 8))
 		{
 			switch(selectedSample[0])
 			{
@@ -1075,7 +1074,7 @@ if(stepCount%256==0)
 			break;
 			}
 		}
-		if (bitRead(row[1], stepCount % 8))
+		if (bitRead(row[1], stepCount/2 % 8))
 		{
 			switch(selectedSample[1])
 			{
@@ -1087,7 +1086,7 @@ if(stepCount%256==0)
 				break;
 			}
 		}
-		if (bitRead(row[2], stepCount % 8))
+		if (bitRead(row[2], stepCount/2 % 8))
 		{
 			switch(selectedSample[2])
 			{
@@ -1099,7 +1098,7 @@ if(stepCount%256==0)
 				break;
 			}
 		}
-		if (bitRead(row[3], stepCount % 8))
+		if (bitRead(row[3], stepCount/2 % 8))
 		{
 			switch(selectedSample[3])
 			{
@@ -1111,7 +1110,7 @@ if(stepCount%256==0)
 				break;
 			}
 		}
-		if (bitRead(row[4], stepCount % 8))
+		if (bitRead(row[4], stepCount/2 % 8))
 		{
 			switch(selectedSample[4])
 			{
