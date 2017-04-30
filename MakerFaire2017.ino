@@ -6,6 +6,16 @@
 #include <stdint.h>  //touchscreeen
 #include "TouchScreen.h"
 #include <Bounce.h>
+#include "AudioSampleDt_kick.h"
+#include "AudioSampleDt_cowbell.h"
+#include "AudioSampleDt_snare.h"
+#include "AudioSampleDt_tamborine.h"
+#include "AudioSampleDt_closedhat.h"
+#include "AudioSampleVer04wavfcus.h"
+#include "AudioSampleShaker.h"
+#include "AudioSampleDt_clap.h"
+#include "AudioSampleCastinet.h"
+#include "AudioSampleDt_rimshot.h"
 // GUItool: begin automatically generated code
 AudioSynthWaveform       waveform9;      //xy=655.2499923706055,2536.000099182129
 AudioSynthWaveform       waveform10; //xy=658.2499923706055,2499.000099182129
@@ -143,8 +153,21 @@ bool noteTrig = false;
 
 // Global Clock
 elapsedMillis sinceTempo;
-int tempo = 120;
+elapsedMillis sinceThreshold;
+elapsedMillis sinceTouch;
+elapsedMillis sinceShift;
+
+//Ben variables
+float tempo = 120;
 int stepCount;
+byte row[5];
+boolean selectedSample[5];
+int rowOn[5];
+int lastOn;
+int totalOn;
+int offThreshold=8;
+byte drumTable[5]={0b01001111,0b10010000,0b11100110,0b11010101,0b11111111};
+boolean GPIOOnline=1;
 
 // Ross' Capsense Panel and Midi quantizing
 elapsedMillis transposeClock;
@@ -238,6 +261,7 @@ float mtof(int note) {     // Outputs a float freq based on incoming MIDI note. 
 }
 
 void setup() {
+		analogReadResolution(10);
   // Global audio stuff
   AudioMemory(50);
   audioShield.enable();
@@ -385,29 +409,31 @@ void rightTrigger() {
 
 void led(unsigned int lednum, unsigned int value)
 {
-  if (lednum > 15) return;
-
-  Wire.beginTransmission((uint8_t)(0x40 + (lednum >> 4)));
-  Wire.write(6 + ((lednum & 15) << 2));
-  if (value == 0) {
-    Wire.write(0);
-    Wire.write(0);
-    Wire.write(0);
-    Wire.write(0x10);
-  } else if (value < 4096) {
-    Wire.write(0);
-    Wire.write(0);
-    Wire.write(value);
-    Wire.write(value >> 8);
-  } else {
-    Wire.write(0);
-    Wire.write(0x10);
-    Wire.write(0);
-    Wire.write(0);
-  }
-  Wire.endTransmission();
-  //int r = Wire.endTransmission();
-  //Serial.println(r);
+	if (GPIOOnline==0) return;
+	
+	Wire.beginTransmission((uint8_t)(0x40 + (lednum >> 4)));
+	Wire.write(6 + ((lednum & 15) << 2));
+	if (value == 0) {
+		Wire.write(0);
+		Wire.write(0);
+		Wire.write(0);
+		Wire.write(0x10);
+		} else if (value < 4096) {
+		Wire.write(0);
+		Wire.write(0);
+		Wire.write(value);
+		Wire.write(value >> 8);
+		} else {
+		Wire.write(0);
+		Wire.write(0x10);
+		Wire.write(0);
+		Wire.write(0);
+	}
+	int r = Wire.endTransmission();
+	if(r!=0)
+	{
+		GPIOOnline=0;
+	}
 }
 
 void pca9685_config(uint8_t addr)
@@ -430,29 +456,115 @@ void mcp23017_config(uint8_t addr, uint16_t dir)
 
 uint16_t button_state[1];
 uint16_t button_high2low[1];
+uint16_t button_state2[1];
+uint16_t button_high2low2[1];
+uint16_t button_state3[1];
+uint16_t button_high2low3[1];
 
 void buttons_update(void)
 {
-  Wire.beginTransmission(0x20);
-  Wire.write(0x12);
-  Wire.endTransmission(false);
-  Wire.requestFrom(0x20, 2);
-  if (Wire.available() >= 2) {
-    uint16_t state;
-    state = Wire.read();
-    state |= Wire.read() << 8;
-    //Serial.println(state);
-    button_high2low[0] = button_state[0] & ~state;
-    button_state[0] = state;
-    if (button_high2low[0]) {
-      Serial.println(button_high2low[0]);
-    }
-  } else {
-    button_high2low[0] = 0;
-  }
+	int r;
+	Wire.beginTransmission(0x20);
+	Wire.write(0x12);
+	r=Wire.endTransmission(false);
+	if(r!=0)
+	{
+		GPIOOnline=0;
+		return;
+	}
+	Wire.requestFrom(0x20, 2);
+	if (Wire.available() >= 2) {
+		uint16_t state;
+		state = Wire.read();
+		state |= Wire.read() << 8;
+		//Serial.println(state);
+		button_high2low[0] = button_state[0] & ~state;
+		button_state[0] = state;
+		if (button_high2low[0]) {
+			for (int b = 0; b < 8; b++)
+			{
+				if (bitRead(button_high2low[0], b))
+				{
+					bitWrite(row[0], b, !(bitRead(row[0], b)));
+					sinceTouch=0;
+				}
+				if (bitRead(button_high2low[0], b + 8))
+				{
+					bitWrite(row[1], b, !(bitRead(row[1], b)));
+					sinceTouch=0;
+				}
+			}
+		}
+		} else {
+		button_high2low[0] = 0;
+	}
+	Wire.beginTransmission(0x21);
+	Wire.write(0x12);
+	r=Wire.endTransmission(false);
+	if(r!=0)
+	{
+		GPIOOnline=0;
+		return;
+	}
+	Wire.requestFrom(0x21, 2);
+	if (Wire.available() >= 2) {
+		uint16_t state2;
+		state2 = Wire.read();
+		state2 |= Wire.read() << 8;
+		//Serial.println(state);
+		button_high2low2[0] = button_state2[0] & ~state2;
+		button_state2[0] = state2;
+		if (button_high2low2[0]) {
+			for (int b = 0; b < 8; b++)
+			{
+				if (bitRead(button_high2low2[0], b))
+				{
+					bitWrite(row[2], b, !(bitRead(row[2], b)));
+					sinceTouch=0;
+				}
+				if (bitRead(button_high2low2[0], b + 8))
+				{
+					bitWrite(row[3], b, !(bitRead(row[3], b)));
+					sinceTouch=0;
+				}
+			}
+		}
+		} else {
+		button_high2low2[0] = 0;
+	}
+	Wire.beginTransmission(0x22);
+	Wire.write(0x12);
+	r=Wire.endTransmission(false);
+	if(r!=0)
+	{
+		GPIOOnline=0;
+		return;
+	}
+	Wire.requestFrom(0x22, 2);
+	if (Wire.available() >= 2) {
+		uint16_t state3;
+		state3 = Wire.read();
+		state3 |= Wire.read() << 8;
+		//Serial.println(state);
+		button_high2low3[0] = button_state3[0] & ~state3;
+		button_state3[0] = state3;
+		if (button_high2low3[0]) {
+			for (int b = 0; b < 8; b++)
+			{
+				if (bitRead(button_high2low3[0], b))
+				{
+					bitWrite(row[4], b, !(bitRead(row[4], b)));
+					sinceTouch=0;
+				}
+			}
+		}
+		} else {
+		button_high2low3[0] = 0;
+	}
 }
 
 void loop() {
+		GPIOOnline=1;
   do_center_panel();
   do_left_panel();
   do_right_panel();
@@ -469,14 +581,20 @@ void loop() {
 
 void led_test(void)
 {
-  static int i = 0;
-
-  led(0, (i + 819 * 0) & 4095);
-  led(1, (i + 819 * 1) & 4095);
-  led(2, (i + 819 * 2) & 4095);
-  led(3, (i + 819 * 3) & 4095);
-  led(4, (i + 819 * 4) & 4095);
-  i++;
+ for (int x = 0; x < 40; x++)
+	{
+		if (x % 8 == stepCount % 8)
+		{
+			led(x, 1000);
+		}
+		else
+		{
+			if(bitRead(row[x/8],x%8))
+			led(x, 4095);
+			else
+			led(x,0);
+		}
+	}
 }
 
 void do_left_panel(void) // Ross's panel
@@ -863,12 +981,151 @@ void do_left_panel(void) // Ross's panel
 
 void do_center_panel(void)
 {
-  if (sinceTempo >= (15000 / tempo))
-  {
-    stepCount++;
-    sinceTempo = 0;
-  }
-  // button step sequencer stuff goes here
+	lastOn=totalOn;
+	totalOn=0;
+	for(int i=0;i<5;i++)
+	rowOn[i]=0;
+	for(int r=0;r<5;r++)
+	{
+		for(int c=0;c<8;c++)
+		{
+			if(bitRead(row[r],c))
+			{
+				rowOn[r]++;
+				totalOn++;
+			}
+		}		
+	}
+	float diff;
+	diff = analogRead(A16) - tempo;
+	tempo = tempo + diff / 4;
+	tempo = (tempo / 8) + 20;
+	if (sinceTempo >= (15000 / tempo))
+	{
+if(stepCount%256==0)
+{
+	    int randomSample;
+		selectedSample[randomSample]=random(2);
+}
+		if(sinceTouch>10000&&totalOn<offThreshold&&stepCount%64==0)
+		{
+			for (int r=0;r<5;r++)
+			{
+				for (int c=0;c<8;c++)
+				{
+					if(totalOn==offThreshold)
+					bitClear(row[r],c);
+				}
+			}
+			if(totalOn<offThreshold)
+			{
+				for(int w=0;w<offThreshold;w++)
+				{
+					int mapStep;
+					int mapRow;
+					mapStep=random(8);
+					mapRow=random(5);
+					bitWrite(row[mapRow],mapStep,bitRead(drumTable[mapRow],mapStep));
+				}
+			}
+		}
+	  	if(totalOn>=offThreshold)
+		{
+			if(lastOn!=totalOn)
+			sinceThreshold=0;
+			if(sinceThreshold>400)
+			{
+				int changeRow=0;
+				int selectedRow;
+				int randomStep;
+				changeRow=max(rowOn[0],rowOn[1]);
+				changeRow=max(changeRow,rowOn[2]);
+				changeRow=max(changeRow,rowOn[3]);
+				changeRow=max(changeRow,rowOn[4]);
+				for(int s=0;s<5;s++)
+				{
+					if(changeRow==rowOn[s])
+					selectedRow=s;
+				}
+				randomStep=random(8);
+				if(sinceTouch>4000)
+				bitClear(row[selectedRow],randomStep);
+				sinceThreshold=0;
+			}
+		}
+		/*
+			#include "AudioSampleDt_kick.h"
+			#include "AudioSampleDt_openhat.h"
+			#include "AudioSampleDt_snare.h"
+			#include "AudioSampleDt_tamborine.h"
+			#include "AudioSampleDt_tom01.h"
+		*/
+		//leftTrigger();
+		//rightTrigger();
+		stepCount++;
+		if (bitRead(row[0], stepCount % 8))
+		{
+			switch(selectedSample[0])
+			{
+			case 0:
+			sound0.play(AudioSampleDt_kick);
+			break;
+			case 1:
+			sound0.play(AudioSampleVer04wavfcus);
+			break;
+			}
+		}
+		if (bitRead(row[1], stepCount % 8))
+		{
+			switch(selectedSample[1])
+			{
+				case 0:
+				sound1.play(AudioSampleDt_snare);
+				break;
+				case 1:
+				sound1.play(AudioSampleDt_clap);
+				break;
+			}
+		}
+		if (bitRead(row[2], stepCount % 8))
+		{
+			switch(selectedSample[2])
+			{
+				case 0:
+				sound2.play(AudioSampleDt_cowbell);
+				break;
+				case 1:
+				sound2.play(AudioSampleDt_rimshot);
+				break;
+			}
+		}
+		if (bitRead(row[3], stepCount % 8))
+		{
+			switch(selectedSample[3])
+			{
+				case 0:
+				sound3.play(AudioSampleDt_closedhat);
+				break;
+				case 1:
+				sound3.play(AudioSampleShaker);
+				break;
+			}
+		}
+		if (bitRead(row[4], stepCount % 8))
+		{
+			switch(selectedSample[4])
+			{
+				case 0:
+				sound4.play(AudioSampleDt_tamborine);
+				break;
+				case 1:
+				sound4.play(AudioSampleCastinet);
+				break;
+			}
+		}
+		sinceTempo = 0;
+	}
+	// button step sequencer stuff goes here
 }
 
 
