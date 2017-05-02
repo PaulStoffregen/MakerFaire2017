@@ -1007,29 +1007,10 @@ void do_center_panel(void)  //Bens Sequencer
                 }
         }
         float diff;
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-        diff = analogRead(A17) - tempo; //was A16, changed to A17 for DRC test
-        tempo = tempo + diff / 4;
-        tempo = (tempo / 2) + 20;
-        if (sinceTempo >= (15000 / tempo))
-=======
-=======
->>>>>>> origin/master
->>>>>>> Stashed changes
         diff = analogRead(A16) - tempo; //was A16, changed to A17 for DRC test
         //tempo = tempo + diff / 4;
         //tempo = (tempo / 2) + 20;
         if (sinceTempo >= (15000 / (tempo*8)))
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> origin/master
-=======
->>>>>>> origin/master
->>>>>>> Stashed changes
         {
 			if(stepCount%rightTiming==0)
 				rightTrigger();
