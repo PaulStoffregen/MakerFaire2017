@@ -154,14 +154,19 @@ bool gateTrig = false;
 bool toggle = false;
 //End of Darcys Touchscreen
 
+
 // Global Clock
+int rightTiming=4;
+int leftTiming=1;
 elapsedMillis sinceTempo;
 elapsedMillis sinceThreshold;
 elapsedMillis sinceTouch;
 elapsedMillis sinceShift;
+int timingValues[7]={1,2,4,8,16,32,64};
+int drumDivider=8;
 
 //Ben variables
-float tempo = 120;
+float tempo = 80;
 int stepCount;
 byte row[5];
 boolean selectedSample[5];
@@ -281,16 +286,16 @@ void setup() {
         mcp23017_config(0x20, 0xFFFF);
 
         // Drums mixer
-        mix1.gain(0, 0.25); // Drum ch. 1
-        mix1.gain(1, 0.25); // Drum ch. 2
-        mix1.gain(2, 0.25); // Drum ch. 3
-        mix1.gain(3, 0.25); // Drum ch. 4
-        mix2.gain(0, 0.5); // Drum mixer 1 daisy chain ==> drum mixer 2
-        mix2.gain(1, 0.5); // Drum ch. 5
+        mix1.gain(0, 1); // Drum ch. 1
+        mix1.gain(1, 1); // Drum ch. 2
+        mix1.gain(2, 1); // Drum ch. 3
+        mix1.gain(3, 1); // Drum ch. 4
+        mix2.gain(0, 1); // Drum mixer 1 daisy chain ==> drum mixer 2
+        mix2.gain(1, 1); // Drum ch. 5
 
         // Master Mixer
         mix3.gain(0, 0.25); // Ross
-        mix3.gain(1, 0.25); // Ben
+        mix3.gain(1, 1); // Ben
         mix3.gain(2, 1); // Darcy
         mix3.gain(3, 1); // Test Oscillator  //connected to DRC test scales
 
@@ -404,10 +409,11 @@ void setup() {
 
 
 void rightTrigger() {
-        noteTrig= true;     // Ben's sequencer calls this
-        gateTrig = true;
-        toggle = !toggle;  ///DRC
+        //noteTrig= true;     // Ben's sequencer calls this
+        //gateTrig = true;
+        //toggle = !toggle;  ///DRC
         //Serial.println(toggle);
+		string1.noteOn(mtof(20),1);
 }
 
 
@@ -575,12 +581,6 @@ void loop() {
         do_center_panel();
         do_left_panel();
         do_right_panel();
-        static elapsedMillis triggermillis;
-        if (triggermillis > 500) {
-                rightTrigger();
-                triggermillis -= 500;
-        }
-        delay(1);
 }
 
 
@@ -1008,16 +1008,18 @@ void do_center_panel(void)  //Bens Sequencer
         }
         float diff;
         diff = analogRead(A16) - tempo; //was A16, changed to A17 for DRC test
-        tempo = tempo + diff / 4;
-        tempo = (tempo / 2) + 20;
-        if (sinceTempo >= (15000 / tempo))
+        //tempo = tempo + diff / 4;
+        //tempo = (tempo / 2) + 20;
+        if (sinceTempo >= (15000 / (tempo*8)))
         {
-                if(stepCount/2%256==0)
+			if(stepCount%rightTiming==0)
+				rightTrigger();
+                if(stepCount/drumDivider%256==0)
                 {
                         int randomSample;
                         selectedSample[randomSample]=random(2);
                 }
-                if(sinceTouch>10000&&totalOn<offThreshold&&stepCount%64==0)
+                if(sinceTouch>4000&&totalOn<offThreshold&&stepCount%64==0)
                 {
                         for (int r=0; r<5; r++)
                         {
@@ -1072,8 +1074,9 @@ void do_center_panel(void)  //Bens Sequencer
                  */
                 //leftTrigger();
                 //rightTrigger();
-                stepCount++;
-                if (bitRead(row[0], stepCount/2 % 8))
+				if(stepCount%drumDivider==0)
+				{
+                if (bitRead(row[0], stepCount/drumDivider % 8))
                 {
                         switch(selectedSample[0])
                         {
@@ -1085,7 +1088,7 @@ void do_center_panel(void)  //Bens Sequencer
                                 break;
                         }
                 }
-                if (bitRead(row[1], stepCount/2 % 8))
+                if (bitRead(row[1], stepCount/drumDivider % 8))
                 {
                         switch(selectedSample[1])
                         {
@@ -1097,7 +1100,7 @@ void do_center_panel(void)  //Bens Sequencer
                                 break;
                         }
                 }
-                if (bitRead(row[2], stepCount/2 % 8))
+                if (bitRead(row[2], stepCount/drumDivider % 8))
                 {
                         switch(selectedSample[2])
                         {
@@ -1109,7 +1112,7 @@ void do_center_panel(void)  //Bens Sequencer
                                 break;
                         }
                 }
-                if (bitRead(row[3], stepCount/2 % 8))
+                if (bitRead(row[3], stepCount/drumDivider % 8))
                 {
                         switch(selectedSample[3])
                         {
@@ -1121,7 +1124,7 @@ void do_center_panel(void)  //Bens Sequencer
                                 break;
                         }
                 }
-                if (bitRead(row[4], stepCount/2 % 8))
+                if (bitRead(row[4], stepCount/drumDivider % 8))
                 {
                         switch(selectedSample[4])
                         {
@@ -1133,6 +1136,8 @@ void do_center_panel(void)  //Bens Sequencer
                                 break;
                         }
                 }
+				}
+				stepCount++;
                 sinceTempo = 0;
         }
         // button step sequencer stuff goes here
@@ -1141,6 +1146,9 @@ void do_center_panel(void)  //Bens Sequencer
 
 void do_right_panel(void)   // DRC touch panel synth stuff goes here
 {
+	int rightTimeSelection;
+	rightTimeSelection=map(analogRead(A17),0,1023,0,6);
+	rightTiming=timingValues[int(rightTimeSelection)];
         TSPoint p = ts.getPoint(); // a point object holds p.x, p.y, and p.z coordinates
         //Serial.print(" p.x = "); Serial.print(p.x);
         //Serial.print("p.y = "); Serial.println(p.y);
@@ -1188,6 +1196,7 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
                 mixer9.gain(3, 1);
                 int twelve = 12;
                 int twentyfour = 24;
+				/*
                 if (toggle == true) { //gate alternates between true and false
                         if (constX > 61 && gateTrig ==true){ //if ts being touched and gate is true
 
@@ -1213,6 +1222,7 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
                      Serial.println("NoteOff");
                    }
                 }
+				*/
 
                 //Y mapped for bitcrushing
                 int BitsMappedY = map(constY, 97, 910, 6, 16);
