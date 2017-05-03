@@ -153,6 +153,7 @@ bool noteTrig = false;
 bool gateTrig = false;
 bool toggle = false;
 //End of Darcys Touchscreen
+int buttonSelection=4;
 
 
 // Global Clock
@@ -162,6 +163,7 @@ elapsedMillis sinceTempo;
 elapsedMillis sinceThreshold;
 elapsedMillis sinceTouch;
 elapsedMillis sinceShift;
+int clockDuration;
 int timingValues[7]={1,2,4,8,16,32,64};
 int drumDivider=8;
 
@@ -283,7 +285,11 @@ void setup() {
         Wire.begin();
         Wire.setClock(400000);
         pca9685_config(0x40);
+		pca9685_config(0x41);
+		pca9685_config(0x42);
         mcp23017_config(0x20, 0xFFFF);
+		mcp23017_config(0x21, 0xFFFF);
+		mcp23017_config(0x22, 0xFFFF);
 
         // Drums mixer
         mix1.gain(0, 1); // Drum ch. 1
@@ -410,10 +416,9 @@ void setup() {
 
 void rightTrigger() {
         //noteTrig= true;     // Ben's sequencer calls this
-        //gateTrig = true;
+        gateTrig = true;
         //toggle = !toggle;  ///DRC
         //Serial.println(toggle);
-		string1.noteOn(mtof(20),1);
 }
 
 
@@ -567,6 +572,22 @@ void buttons_update(void)
                                         bitWrite(row[4], b, !(bitRead(row[4], b)));
                                         sinceTouch=0;
                                 }
+								if (bitRead(button_high2low3[0], b+8))
+                                {
+                                        if(b<5)
+											buttonSelection=b;
+										if(b==5||b==6) //octave control
+										{
+											if(b==5)
+												buttonCount--;
+											if(b==6)
+												buttonCount++;
+											if(buttonCount>2)
+												buttonCount=2;
+											if(buttonCount<(-2))
+												buttonCount=-2;
+										}
+                                }
                         }
                 }
         } else {
@@ -588,7 +609,7 @@ void led_test(void)
 {
         for (int x = 0; x < 40; x++)
         {
-                if (x % 8 == stepCount/2 % 8)
+                if (x % 8 == ((stepCount/drumDivider) % 8))
                 {
                         led(x, 1000);
                 }
@@ -600,6 +621,36 @@ void led_test(void)
                                 led(x,0);
                 }
         }
+		for(int i=0;i<5;i++)
+		{
+				if(buttonSelection==i)
+					led(i+40,4095);
+				else
+					led(i+40,0);
+		}
+		switch(buttonCount+2)
+		{
+			case 0:
+			led(45,4095);
+			led(46,0);
+			break;
+			case 1:
+			led(45,1024);
+			led(46,0);
+			break;
+			case 2:
+			led(45,200);
+			led(46,200);
+			break;
+			case 3:
+			led(45,0);
+			led(46,1024);
+			break;
+			case 4:
+			led(45,0);
+			led(46,4095);
+			break;
+		}
 }
 
 void do_left_panel(void) // Ross's panel
@@ -727,8 +778,10 @@ void do_left_panel(void) // Ross's panel
                 buttonCount++;
         }
 
+		/*
         buttonCount = max(buttonCount, -2);
         buttonCount = min(buttonCount, 2);
+		*/
 
         baseOctave = 60;
         octaveMod = buttonCount * 12;
@@ -1008,8 +1061,8 @@ void do_center_panel(void)  //Bens Sequencer
         }
         float diff;
         diff = analogRead(A16) - tempo; //was A16, changed to A17 for DRC test
-        //tempo = tempo + diff / 4;
-        //tempo = (tempo / 2) + 20;
+        tempo = tempo + diff / 4;
+        tempo = (tempo / 2) + 20;
         if (sinceTempo >= (15000 / (tempo*8)))
         {
 			if(stepCount%rightTiming==0)
@@ -1138,6 +1191,7 @@ void do_center_panel(void)  //Bens Sequencer
                 }
 				}
 				stepCount++;
+				clockDuration=sinceTempo;
                 sinceTempo = 0;
         }
         // button step sequencer stuff goes here
@@ -1196,7 +1250,6 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
                 mixer9.gain(3, 1);
                 int twelve = 12;
                 int twentyfour = 24;
-				/*
                 if (toggle == true) { //gate alternates between true and false
                         if (constX > 61 && gateTrig ==true){ //if ts being touched and gate is true
 
@@ -1222,7 +1275,6 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
                      //Serial.println("NoteOff");
                    }
                 }
-				*/
 
                 //Y mapped for bitcrushing
                 int BitsMappedY = map(constY, 97, 910, 6, 16);
@@ -1394,7 +1446,7 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
         }
 //////////////////////////////////
         else if (selectionValue > 513 && selectionValue < 768) { //waveform chord mixer waveform 1&2 > envelope1 > out
-                Serial.print("waveform chord mixer");
+               // Serial.print("waveform chord mixer");
 /*
 //Reference this logic for triggering along with master clock
                   if (toggle == true) { //gate alternates between true and false
