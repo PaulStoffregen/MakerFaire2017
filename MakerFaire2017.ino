@@ -951,7 +951,7 @@ void do_left_panel(void) // Ross's panel
   gate5[0] = cleanSensorOutput5 >= thresh; // Comparator threshold for touch sensor
 
   // Divide
-  divide = map(analogRead(31), 0, 1023, 8, 1); // Division amounts
+  divide = map(analogRead(31), 0, 1023, 32, 8); // Division amounts
 
   if (stepCount % divide == 0) {
     gate1[1] = 0;
