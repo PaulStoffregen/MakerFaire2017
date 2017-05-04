@@ -313,11 +313,11 @@ void setup() {
   // Global audio stuff
   AudioMemory(50);
   audioShield.enable();
-  audioShield.volume(0.5);
+  audioShield.volume(1.0);
 
   // Test Oscillator
   sine1.amplitude(0.5);
-  //sine1.frequency(440);
+  sine1.frequency(440);
 
   // Wire
   Wire.begin();
@@ -330,18 +330,18 @@ void setup() {
   mcp23017_config(0x22, 0xFFFF);
 
   // Drums mixer
-  mix1.gain(0, 1); // Drum ch. 1
-  mix1.gain(1, 1); // Drum ch. 2
-  mix1.gain(2, 1); // Drum ch. 3
-  mix1.gain(3, 1); // Drum ch. 4
-  mix2.gain(0, 1); // Drum mixer 1 daisy chain ==> drum mixer 2
-  mix2.gain(1, 1); // Drum ch. 5
+  mix1.gain(0, 0.25); // Drum ch. 1
+  mix1.gain(1, 0.25); // Drum ch. 2
+  mix1.gain(2, 0.25); // Drum ch. 3
+  mix1.gain(3, 0.25); // Drum ch. 4
+  mix2.gain(0, 0.5); // Drum mixer 1 daisy chain ==> drum mixer 2
+  mix2.gain(1, 0.5); // Drum ch. 5
 
   // Master Mixer
-  mix3.gain(0, 0.25); // Ross
-  mix3.gain(1, 1); // Ben
-  mix3.gain(2, 1); // Darcy
-  mix3.gain(3, 1); // Test Oscillator  //connected to DRC test scales
+  mix3.gain(0, 0.3); // Ross
+  mix3.gain(1, 0.2); // Ben
+  mix3.gain(2, 0); // Darcy
+  mix3.gain(3, 0); // Test Oscillator  //connected to DRC test scales
 
   // ROSS SETUP
   int sensorSum1 = 0;
@@ -468,7 +468,7 @@ void setup() {
   //mixer11.gain(0, 1);
   //mixer12.gain(0, 1);
 
-    // Master notch filter
+  // Master notch filter
 
   sine2.amplitude(1.0);
   sine2.frequency(0.1);
