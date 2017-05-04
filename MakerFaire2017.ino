@@ -347,7 +347,7 @@ void setup() {
   // Master Mixer
   mix3.gain(0, 0.3); // Ross
   mix3.gain(1, 0.2); // Ben
-  mix3.gain(2, 0); // Darcy
+  mix3.gain(2, 0.1); // Darcy
   mix3.gain(3, 0); // Test Oscillator  //connected to DRC test scales
 
   // ROSS SETUP
