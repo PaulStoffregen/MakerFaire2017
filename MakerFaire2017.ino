@@ -16,118 +16,127 @@
 #include "AudioSampleDt_clap.h"
 #include "AudioSampleCastinet.h"
 #include "AudioSampleDt_rimshot.h"
+#include <Audio.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <SD.h>
+#include <SerialFlash.h>
+
 // GUItool: begin automatically generated code
-AudioSynthWaveform waveform9;            //xy=655.2499923706055,2536.000099182129
-AudioSynthWaveform waveform10;       //xy=658.2499923706055,2499.000099182129
-AudioSynthWaveform waveform6;       //xy=661.2500038146973,2249.000349998474
-AudioSynthWaveform waveform8;       //xy=663.25,2292.000228881836
-AudioSynthWaveform waveform7;            //xy=663.2500038146973,2335.000442504883
-AudioSynthWaveform waveform11;       //xy=669.2499923706055,2409.000099182129
-AudioSynthWaveform waveform12;       //xy=670.2499923706055,2445.000099182129
-AudioMixer4 mixer7;                      //xy=828.2499923706055,2521.000099182129
-AudioMixer4 mixer3;                      //xy=837.2499923706055,2447.000099182129
-AudioSynthWaveform waveform14;            //xy=850.75,2604.25
-AudioMixer4 mixer4;                      //xy=869.2499885559082,2314.0001068115234
-AudioSynthWaveform waveform2;            //xy=914.5,1612.25
-AudioSynthWaveform waveform3;            //xy=919.5,1710.25
-AudioSynthWaveform waveform1;            //xy=921.5,1512.25
-AudioSynthWaveform waveform4;            //xy=924.5,1810.25
-AudioSynthWaveform waveform5;            //xy=925.5,1905.25
-AudioFilterStateVariable filter6;        //xy=988.5000076293945,2457.25013923645
-AudioFilterStateVariable filter7;        //xy=992.500114440918,2532.250141143799
-AudioSynthKarplusStrong string2;         //xy=1022.2499923706055,2256.000099182129
-AudioSynthKarplusStrong string1;         //xy=1025.2499923706055,2220.000099182129
-AudioFilterStateVariable filter2;        //xy=1049.5,1618.25
-AudioEffectEnvelope envelope6;      //xy=1049.2499923706055,2327.000099182129
-AudioFilterStateVariable filter3;        //xy=1054.5,1716.25
-AudioFilterStateVariable filter1;        //xy=1056.5,1518.25
-AudioFilterStateVariable filter4;        //xy=1059.5,1816.25
-AudioFilterStateVariable filter5;        //xy=1060.5,1911.25
-AudioSynthWaveform waveform13;            //xy=1072.2499923706055,2393.000099182129
-AudioEffectEnvelope envelope7;      //xy=1153.2499923706055,2483.000099182129
-AudioEffectEnvelope envelope8;      //xy=1153.2499923706055,2531.000099182129
-AudioMixer4 mixer6;                      //xy=1173.2499923706055,2240.000099182129
-AudioEffectEnvelope envelope2;           //xy=1184.5,1605.25
-AudioEffectEnvelope envelope3;           //xy=1189.5,1703.25
-AudioEffectEnvelope envelope1;           //xy=1191.5,1505.25
-AudioEffectEnvelope envelope4;           //xy=1194.5,1803.25
-AudioEffectEnvelope envelope5;           //xy=1195.5,1898.25
-AudioFilterStateVariable filter8;        //xy=1194.7500343322754,2336.000066757202
-AudioPlayMemory sound1;                  //xy=1199.5,2036.25
-AudioPlayMemory sound0;                  //xy=1200.5,1986.25
-AudioPlayMemory sound2;                  //xy=1203.5,2082.25
-AudioPlayMemory sound3;                  //xy=1206.5,2132.25
-AudioEffectBitcrusher bitcrusher1;       //xy=1313.250015258789,2248.000196456909
-AudioMixer4 mixer12;                     //xy=1340.2499923706055,2344.000099182129
-AudioMixer4 mixer11;                     //xy=1343.2499923706055,2508.000099182129
-AudioPlayMemory sound4;                  //xy=1375.5,2126.25
-AudioMixer4 mix1;                        //xy=1381.5,2057.25
-AudioMixer4 mixer1;                      //xy=1393.5,1696.25
-AudioMixer4 mixer9;                      //xy=1461.2499923706055,2280.000099182129
-AudioMixer4 mix2;                        //xy=1528.5,2075.25
-AudioSynthWaveformSine sine1;            //xy=1532.5000534057617,2152.250062942505
-AudioMixer4 mixer2;                      //xy=1542.5,1716.25
-AudioMixer4 mixer13;              //xy=1568.2499923706055,2387.000099182129
-AudioMixer4 mix3;                        //xy=1723.5,2081.25
-AudioOutputI2S i2s2;                     //xy=1867.5,2087.25
-AudioConnection patchCord1(waveform9, 0, mixer7, 2);
-AudioConnection patchCord2(waveform10, 0, mixer7, 1);
-AudioConnection patchCord3(waveform6, 0, mixer4, 0);
-AudioConnection patchCord4(waveform8, 0, mixer4, 1);
-AudioConnection patchCord5(waveform7, 0, mixer4, 2);
+AudioSynthWaveform waveform6;            //xy=441.9166603088379,960.3332681655884
+AudioSynthWaveform waveform8;            //xy=443.9166603088379,1003.3332681655884
+AudioSynthWaveform waveform7;            //xy=443.9166603088379,1046.3332681655884
+AudioSynthWaveform waveform9;            //xy=507.9166259765625,1254.3333129882812
+AudioSynthWaveform waveform10;           //xy=510.9166259765625,1217.3333129882812
+AudioSynthWaveform waveform11;           //xy=521.9166259765625,1127.3333129882812
+AudioSynthWaveform waveform12;           //xy=522.9166259765625,1163.3333129882812
+AudioMixer4 mixer4;                      //xy=591.916748046875,992.3332986831665
+AudioMixer4 mixer7;                      //xy=680.9166259765625,1239.3333129882812
+AudioMixer4 mixer3;                      //xy=689.9166259765625,1165.3333129882812
+AudioSynthWaveform waveform14;           //xy=702.9166259765625,1322.3333129882812
+AudioEffectEnvelope envelope6;           //xy=727.9167175292969,1039.3332529067993
+AudioSynthWaveform waveform2;            //xy=766.9166259765625,330.33331298828125
+AudioSynthWaveform waveform3;            //xy=771.9166259765625,428.33331298828125
+AudioSynthWaveform waveform1;            //xy=773.9166259765625,230.33331298828125
+AudioSynthWaveform waveform4;            //xy=776.9166259765625,528.3333129882812
+AudioSynthWaveform waveform5;            //xy=777.9166259765625,623.3333129882812
+AudioFilterStateVariable filter6;        //xy=840.9166259765625,1175.3333129882812
+AudioFilterStateVariable filter7;        //xy=844.9166259765625,1250.3333129882812
+AudioSynthKarplusStrong string2;         //xy=858.9166831970215,957.3332509994507
+AudioSynthKarplusStrong string1;         //xy=861.9166831970215,921.3332509994507
+AudioSynthWaveformPWM pwm1;              //xy=895.0000610351562,1043.0000009536743
+AudioFilterStateVariable filter2;        //xy=901.9166259765625,336.33331298828125
+AudioFilterStateVariable filter3;        //xy=906.9166259765625,434.33331298828125
+AudioFilterStateVariable filter1;        //xy=908.9166259765625,236.33331298828125
+AudioFilterStateVariable filter4;        //xy=911.9166259765625,534.3333129882812
+AudioFilterStateVariable filter5;        //xy=912.9166259765625,629.3333129882812
+AudioSynthWaveform waveform13;           //xy=924.9166259765625,1111.3333129882812
+AudioEffectEnvelope envelope7;           //xy=1005.9166259765625,1201.3333129882812
+AudioEffectEnvelope envelope8;           //xy=1005.9166259765625,1249.3333129882812
+AudioMixer4 mixer6;                      //xy=1025.9166259765625,958.3333129882812
+AudioEffectEnvelope envelope2;           //xy=1036.9166259765625,323.33331298828125
+AudioEffectEnvelope envelope3;           //xy=1041.9166259765625,421.33331298828125
+AudioEffectEnvelope envelope1;           //xy=1043.9166259765625,223.33331298828125
+AudioEffectEnvelope envelope4;           //xy=1046.9166259765625,521.3333129882812
+AudioEffectEnvelope envelope5;           //xy=1047.9166259765625,616.3333129882812
+AudioFilterStateVariable filter8;        //xy=1046.9166259765625,1054.3333129882812
+AudioPlayMemory sound1;                  //xy=1051.9166259765625,754.3333129882812
+AudioPlayMemory sound0;                  //xy=1052.9166259765625,704.3333129882812
+AudioPlayMemory sound2;                  //xy=1055.9166259765625,800.3333129882812
+AudioPlayMemory sound3;                  //xy=1058.9166259765625,850.3333129882812
+AudioEffectBitcrusher bitcrusher1;       //xy=1165.9166259765625,966.3333129882812
+AudioMixer4 mixer12;                     //xy=1192.9166259765625,1062.3333129882812
+AudioMixer4 mixer11;                     //xy=1195.9166259765625,1226.3333129882812
+AudioPlayMemory sound4;                  //xy=1227.9166259765625,844.3333129882812
+AudioMixer4 mix1;                        //xy=1233.9166259765625,775.3333129882812
+AudioMixer4 mixer1;                      //xy=1245.9166259765625,414.33331298828125
+AudioMixer4 mixer9;                      //xy=1313.9166259765625,998.3333129882812
+AudioMixer4 mix2;                        //xy=1380.9166259765625,793.3333129882812
+AudioSynthWaveformSine sine1;            //xy=1384.9166259765625,870.3333129882812
+AudioMixer4 mixer2;                      //xy=1394.9166259765625,434.33331298828125
+AudioMixer4 mixer13;                     //xy=1420.9166259765625,1105.3333129882812
+AudioMixer4 mix3;                        //xy=1575.9166259765625,799.3333129882812
+AudioOutputI2S i2s2;                     //xy=1719.9166259765625,805.3333129882812
+AudioConnection patchCord1(waveform6, 0, mixer4, 0);
+AudioConnection patchCord2(waveform8, 0, mixer4, 1);
+AudioConnection patchCord3(waveform7, 0, mixer4, 2);
+AudioConnection patchCord4(waveform9, 0, mixer7, 2);
+AudioConnection patchCord5(waveform10, 0, mixer7, 1);
 AudioConnection patchCord6(waveform11, 0, mixer3, 1);
 AudioConnection patchCord7(waveform12, 0, mixer3, 2);
-AudioConnection patchCord8(mixer7, 0, filter7, 0);
-AudioConnection patchCord9(mixer3, 0, filter6, 0);
-AudioConnection patchCord10(waveform14, 0, filter6, 1);
-AudioConnection patchCord11(waveform14, 0, filter7, 1);
-AudioConnection patchCord12(mixer4, 0, envelope6, 0);          //(mixer4, 3f59f935.4ccb76);
-AudioConnection patchCord13(waveform2, 0, filter2, 0);
-AudioConnection patchCord14(waveform3, 0, filter3, 0);
-AudioConnection patchCord15(waveform1, 0, filter1, 0);
-AudioConnection patchCord16(waveform4, 0, filter4, 0);
-AudioConnection patchCord17(waveform5, 0, filter5, 0);
-AudioConnection patchCord18(filter6, 0, envelope7, 0);
-AudioConnection patchCord19(filter7, 0, envelope8, 0);
-AudioConnection patchCord20(string2, 0, mixer6, 1);
-AudioConnection patchCord21(string1, 0, mixer6, 0);
-AudioConnection patchCord22(filter2, 0, envelope2, 0);
-AudioConnection patchCord23(envelope6, 0, filter8, 0);
-AudioConnection patchCord24(filter3, 0, envelope3, 0);
-AudioConnection patchCord25(filter1, 0, envelope1, 0);
-AudioConnection patchCord26(filter4, 0, envelope4, 0);
-AudioConnection patchCord27(filter5, 0, envelope5, 0);
-AudioConnection patchCord28(waveform13, 0, filter8, 1);
-AudioConnection patchCord29(envelope7, 0, mixer11, 1);
-AudioConnection patchCord30(envelope8, 0, mixer11, 2);
-AudioConnection patchCord31(mixer6, bitcrusher1);
-AudioConnection patchCord32(envelope2, 0, mixer1, 1);
-AudioConnection patchCord33(envelope3, 0, mixer1, 2);
-AudioConnection patchCord34(envelope1, 0, mixer1, 0);
-AudioConnection patchCord35(envelope4, 0, mixer1, 3);
-AudioConnection patchCord36(envelope5, 0, mixer2, 1);
-AudioConnection patchCord37(filter8, 0, mixer12, 0);
-AudioConnection patchCord38(filter8, 1, mixer12, 1);
-AudioConnection patchCord39(filter8, 2, mixer12, 2);
-AudioConnection patchCord40(sound1, 0, mix1, 1);
-AudioConnection patchCord41(sound0, 0, mix1, 0);
-AudioConnection patchCord42(sound2, 0, mix1, 2);
-AudioConnection patchCord43(sound3, 0, mix1, 3);
-AudioConnection patchCord44(bitcrusher1, 0, mixer9, 2);
-AudioConnection patchCord45(mixer12, 0, mixer13, 1);
-AudioConnection patchCord46(mixer11, 0, mixer13, 2);
-AudioConnection patchCord47(sound4, 0, mix2, 1);
-AudioConnection patchCord48(mix1, 0, mix2, 0);
-AudioConnection patchCord49(mixer1, 0, mixer2, 0);
-AudioConnection patchCord50(mixer9, 0, mixer13, 0);
-AudioConnection patchCord51(mix2, 0, mix3, 1);
-AudioConnection patchCord52(sine1, 0, mix3, 3);
-AudioConnection patchCord53(mixer2, 0, mix3, 0);
-AudioConnection patchCord54(mixer13, 0, mix3, 2);
-AudioConnection patchCord55(mix3, 0, i2s2, 0);
-AudioConnection patchCord56(mix3, 0, i2s2, 1);
-AudioControlSGTL5000 audioShield;        //xy=1915.5,1977.25
+AudioConnection patchCord8(mixer4, envelope6);
+AudioConnection patchCord9(mixer7, 0, filter7, 0);
+AudioConnection patchCord10(mixer3, 0, filter6, 0);
+AudioConnection patchCord11(waveform14, 0, filter6, 1);
+AudioConnection patchCord12(waveform14, 0, filter7, 1);
+AudioConnection patchCord13(envelope6, pwm1);
+AudioConnection patchCord14(waveform2, 0, filter2, 0);
+AudioConnection patchCord15(waveform3, 0, filter3, 0);
+AudioConnection patchCord16(waveform1, 0, filter1, 0);
+AudioConnection patchCord17(waveform4, 0, filter4, 0);
+AudioConnection patchCord18(waveform5, 0, filter5, 0);
+AudioConnection patchCord19(filter6, 0, envelope7, 0);
+AudioConnection patchCord20(filter7, 0, envelope8, 0);
+AudioConnection patchCord21(string2, 0, mixer6, 1);
+AudioConnection patchCord22(string1, 0, mixer6, 0);
+AudioConnection patchCord23(pwm1, 0, filter8, 0);
+AudioConnection patchCord24(filter2, 0, envelope2, 0);
+AudioConnection patchCord25(filter3, 0, envelope3, 0);
+AudioConnection patchCord26(filter1, 0, envelope1, 0);
+AudioConnection patchCord27(filter4, 0, envelope4, 0);
+AudioConnection patchCord28(filter5, 0, envelope5, 0);
+AudioConnection patchCord29(waveform13, 0, filter8, 1);
+AudioConnection patchCord30(envelope7, 0, mixer11, 1);
+AudioConnection patchCord31(envelope8, 0, mixer11, 2);
+AudioConnection patchCord32(mixer6, bitcrusher1);
+AudioConnection patchCord33(envelope2, 0, mixer1, 1);
+AudioConnection patchCord34(envelope3, 0, mixer1, 2);
+AudioConnection patchCord35(envelope1, 0, mixer1, 0);
+AudioConnection patchCord36(envelope4, 0, mixer1, 3);
+AudioConnection patchCord37(envelope5, 0, mixer2, 1);
+AudioConnection patchCord38(filter8, 0, mixer12, 0);
+AudioConnection patchCord39(filter8, 1, mixer12, 1);
+AudioConnection patchCord40(filter8, 2, mixer12, 2);
+AudioConnection patchCord41(sound1, 0, mix1, 1);
+AudioConnection patchCord42(sound0, 0, mix1, 0);
+AudioConnection patchCord43(sound2, 0, mix1, 2);
+AudioConnection patchCord44(sound3, 0, mix1, 3);
+AudioConnection patchCord45(bitcrusher1, 0, mixer9, 2);
+AudioConnection patchCord46(mixer12, 0, mixer13, 1);
+AudioConnection patchCord47(mixer11, 0, mixer13, 2);
+AudioConnection patchCord48(sound4, 0, mix2, 1);
+AudioConnection patchCord49(mix1, 0, mix2, 0);
+AudioConnection patchCord50(mixer1, 0, mixer2, 0);
+AudioConnection patchCord51(mixer9, 0, mixer13, 0);
+AudioConnection patchCord52(mix2, 0, mix3, 1);
+AudioConnection patchCord53(sine1, 0, mix3, 3);
+AudioConnection patchCord54(mixer2, 0, mix3, 0);
+AudioConnection patchCord55(mixer13, 0, mix3, 2);
+AudioConnection patchCord56(mix3, 0, i2s2, 0);
+AudioConnection patchCord57(mix3, 0, i2s2, 1);
+AudioControlSGTL5000 audioShield;        //xy=1767.9166259765625,695.3333129882812
 // GUItool: end automatically generated code
+
 
 // Darcys Touchscreen Pins and Buttons
 #define YP A6  // must be an analog pin, use "An" notation!
@@ -285,11 +294,11 @@ void setup() {
         Wire.begin();
         Wire.setClock(400000);
         pca9685_config(0x40);
-		pca9685_config(0x41);
-		pca9685_config(0x42);
+        pca9685_config(0x41);
+        pca9685_config(0x42);
         mcp23017_config(0x20, 0xFFFF);
-		mcp23017_config(0x21, 0xFFFF);
-		mcp23017_config(0x22, 0xFFFF);
+        mcp23017_config(0x21, 0xFFFF);
+        mcp23017_config(0x22, 0xFFFF);
 
         // Drums mixer
         mix1.gain(0, 1); // Drum ch. 1
@@ -572,21 +581,21 @@ void buttons_update(void)
                                         bitWrite(row[4], b, !(bitRead(row[4], b)));
                                         sinceTouch=0;
                                 }
-								if (bitRead(button_high2low3[0], b+8))
+                                if (bitRead(button_high2low3[0], b+8))
                                 {
                                         if(b<5)
-											buttonSelection=b;
-										if(b==5||b==6) //octave control
-										{
-											if(b==5)
-												buttonCount--;
-											if(b==6)
-												buttonCount++;
-											if(buttonCount>2)
-												buttonCount=2;
-											if(buttonCount<(-2))
-												buttonCount=-2;
-										}
+                                                buttonSelection=b;
+                                        if(b==5||b==6) //octave control
+                                        {
+                                                if(b==5)
+                                                        buttonCount--;
+                                                if(b==6)
+                                                        buttonCount++;
+                                                if(buttonCount>2)
+                                                        buttonCount=2;
+                                                if(buttonCount<(-2))
+                                                        buttonCount=-2;
+                                        }
                                 }
                         }
                 }
@@ -621,36 +630,36 @@ void led_test(void)
                                 led(x,0);
                 }
         }
-		for(int i=0;i<5;i++)
-		{
-				if(buttonSelection==i)
-					led(i+40,4095);
-				else
-					led(i+40,0);
-		}
-		switch(buttonCount+2)
-		{
-			case 0:
-			led(45,4095);
-			led(46,0);
-			break;
-			case 1:
-			led(45,1024);
-			led(46,0);
-			break;
-			case 2:
-			led(45,200);
-			led(46,200);
-			break;
-			case 3:
-			led(45,0);
-			led(46,1024);
-			break;
-			case 4:
-			led(45,0);
-			led(46,4095);
-			break;
-		}
+        for(int i=0; i<5; i++)
+        {
+                if(buttonSelection==i)
+                        led(i+40,4095);
+                else
+                        led(i+40,0);
+        }
+        switch(buttonCount+2)
+        {
+        case 0:
+                led(45,4095);
+                led(46,0);
+                break;
+        case 1:
+                led(45,1024);
+                led(46,0);
+                break;
+        case 2:
+                led(45,200);
+                led(46,200);
+                break;
+        case 3:
+                led(45,0);
+                led(46,1024);
+                break;
+        case 4:
+                led(45,0);
+                led(46,4095);
+                break;
+        }
 }
 
 void do_left_panel(void) // Ross's panel
@@ -673,7 +682,8 @@ void do_left_panel(void) // Ross's panel
         waveform5.pulseWidth(pw);
 
 //int chordSelect = map(analogRead(TsPot1), 0, 1023, 1, 9);
-//Serial.print("chordSelect = "); Serial.println(chordSelect);
+        chordSelect = buttonSelection+1;
+        //Serial.print("chordSelect = "); Serial.println(chordSelect);
 
         switch (chordSelect) {
 // DRC chordSelect determined by random clock or could be assigned to buttons
@@ -778,10 +788,10 @@ void do_left_panel(void) // Ross's panel
                 buttonCount++;
         }
 
-		/*
-        buttonCount = max(buttonCount, -2);
-        buttonCount = min(buttonCount, 2);
-		*/
+        /*
+            buttonCount = max(buttonCount, -2);
+            buttonCount = min(buttonCount, 2);
+         */
 
         baseOctave = 60;
         octaveMod = buttonCount * 12;
@@ -1065,8 +1075,8 @@ void do_center_panel(void)  //Bens Sequencer
         tempo = (tempo / 2) + 20;
         if (sinceTempo >= (15000 / (tempo*8)))
         {
-			if(stepCount%rightTiming==0)
-				rightTrigger();
+                if(stepCount%rightTiming==0)
+                        rightTrigger();
                 if(stepCount/drumDivider%256==0)
                 {
                         int randomSample;
@@ -1127,71 +1137,71 @@ void do_center_panel(void)  //Bens Sequencer
                  */
                 //leftTrigger();
                 //rightTrigger();
-				if(stepCount%drumDivider==0)
-				{
-                if (bitRead(row[0], stepCount/drumDivider % 8))
+                if(stepCount%drumDivider==0)
                 {
-                        switch(selectedSample[0])
+                        if (bitRead(row[0], stepCount/drumDivider % 8))
                         {
-                        case 0:
-                                sound0.play(AudioSampleDt_kick);
-                                break;
-                        case 1:
-                                sound0.play(AudioSampleVer04wavfcus);
-                                break;
+                                switch(selectedSample[0])
+                                {
+                                case 0:
+                                        sound0.play(AudioSampleDt_kick);
+                                        break;
+                                case 1:
+                                        sound0.play(AudioSampleVer04wavfcus);
+                                        break;
+                                }
+                        }
+                        if (bitRead(row[1], stepCount/drumDivider % 8))
+                        {
+                                switch(selectedSample[1])
+                                {
+                                case 0:
+                                        sound1.play(AudioSampleDt_snare);
+                                        break;
+                                case 1:
+                                        sound1.play(AudioSampleDt_clap);
+                                        break;
+                                }
+                        }
+                        if (bitRead(row[2], stepCount/drumDivider % 8))
+                        {
+                                switch(selectedSample[2])
+                                {
+                                case 0:
+                                        sound2.play(AudioSampleDt_cowbell);
+                                        break;
+                                case 1:
+                                        sound2.play(AudioSampleDt_rimshot);
+                                        break;
+                                }
+                        }
+                        if (bitRead(row[3], stepCount/drumDivider % 8))
+                        {
+                                switch(selectedSample[3])
+                                {
+                                case 0:
+                                        sound3.play(AudioSampleDt_closedhat);
+                                        break;
+                                case 1:
+                                        sound3.play(AudioSampleShaker);
+                                        break;
+                                }
+                        }
+                        if (bitRead(row[4], stepCount/drumDivider % 8))
+                        {
+                                switch(selectedSample[4])
+                                {
+                                case 0:
+                                        sound4.play(AudioSampleDt_tamborine);
+                                        break;
+                                case 1:
+                                        sound4.play(AudioSampleCastinet);
+                                        break;
+                                }
                         }
                 }
-                if (bitRead(row[1], stepCount/drumDivider % 8))
-                {
-                        switch(selectedSample[1])
-                        {
-                        case 0:
-                                sound1.play(AudioSampleDt_snare);
-                                break;
-                        case 1:
-                                sound1.play(AudioSampleDt_clap);
-                                break;
-                        }
-                }
-                if (bitRead(row[2], stepCount/drumDivider % 8))
-                {
-                        switch(selectedSample[2])
-                        {
-                        case 0:
-                                sound2.play(AudioSampleDt_cowbell);
-                                break;
-                        case 1:
-                                sound2.play(AudioSampleDt_rimshot);
-                                break;
-                        }
-                }
-                if (bitRead(row[3], stepCount/drumDivider % 8))
-                {
-                        switch(selectedSample[3])
-                        {
-                        case 0:
-                                sound3.play(AudioSampleDt_closedhat);
-                                break;
-                        case 1:
-                                sound3.play(AudioSampleShaker);
-                                break;
-                        }
-                }
-                if (bitRead(row[4], stepCount/drumDivider % 8))
-                {
-                        switch(selectedSample[4])
-                        {
-                        case 0:
-                                sound4.play(AudioSampleDt_tamborine);
-                                break;
-                        case 1:
-                                sound4.play(AudioSampleCastinet);
-                                break;
-                        }
-                }
-				}
-				stepCount++;
-				clockDuration=sinceTempo;
+                stepCount++;
+                clockDuration=sinceTempo;
                 sinceTempo = 0;
         }
         // button step sequencer stuff goes here
@@ -1200,9 +1210,9 @@ void do_center_panel(void)  //Bens Sequencer
 
 void do_right_panel(void)   // DRC touch panel synth stuff goes here
 {
-	int rightTimeSelection;
-	rightTimeSelection=map(analogRead(A17),0,1023,0,6);
-	rightTiming=timingValues[int(rightTimeSelection)];
+        int rightTimeSelection;
+        rightTimeSelection=map(analogRead(A17),0,1023,0,6);
+        rightTiming=timingValues[int(rightTimeSelection)];
         TSPoint p = ts.getPoint(); // a point object holds p.x, p.y, and p.z coordinates
         //Serial.print(" p.x = "); Serial.print(p.x);
         //Serial.print("p.y = "); Serial.println(p.y);
@@ -1211,192 +1221,149 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
         int constY = constrain(p.y, 97, 910); //A6
         //Serial.print("consty = "); Serial.println(constY);
 
-
         noteSelect = map(constX, 60, 950, 0, 19);
-        waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
-
         //Serial.print ("noteSelect = "); Serial.println(noteSelect);
+        //waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
         selectionValue = analogRead(selectionPin); //A20 this is used to select the different synth options in lieu of a button/rotary interaface.
-
-   scale[0] = chord[0];
-   scale[1] = chord[1];
-   scale[2] = chord[2];
-   scale[3] = chord[3];
-   scale[4] = chord[4];
-   scale[5] = chord[0] + 12;
-   scale[6] = chord[1] + 12;
-   scale[7] = chord[2] + 12;
-   scale[8] = chord[3] + 12;
-   scale[9] = chord[4] + 12;
-   scale[10] = chord[0] + 24;
-   scale[11] = chord[1] + 24;
-   scale[12] = chord[2] + 24;
-   scale[13] = chord[3] + 24;
-   scale[14] = chord[4] + 24;
-   scale[15] = chord[0] + 36;
-   scale[16] = chord[1] + 36;
-   scale[17] = chord[2] + 36;
-   scale[18] = chord[3] + 36;
-   scale[19] = chord[4] + 36;
-   //sine1.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
-
+        scale[0] = chord[0];
+        scale[1] = chord[1];
+        scale[2] = chord[2];
+        scale[3] = chord[3];
+        scale[4] = chord[4];
+        scale[5] = chord[0] + 12;
+        scale[6] = chord[1] + 12;
+        scale[7] = chord[2] + 12;
+        scale[8] = chord[3] + 12;
+        scale[9] = chord[4] + 12;
+        scale[10] = chord[0] + 24;
+        scale[11] = chord[1] + 24;
+        scale[12] = chord[2] + 24;
+        scale[13] = chord[3] + 24;
+        scale[14] = chord[4] + 24;
+        scale[15] = chord[0] + 36;
+        scale[16] = chord[1] + 36;
+        scale[17] = chord[2] + 36;
+        scale[18] = chord[3] + 36;
+        scale[19] = chord[4] + 36;
+        //sine1.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+        //Serial.print("selectionValue"); Serial.println(selectionValue);
 ///////////////////////////GUITAR & BITCRUSHING
         if (selectionValue > 0 && selectionValue < 256) { //GUITAR w/ distortion patch: string1&2 > bitcrusher1
-//strings arent being triggered directly on the beat.  Ask ben and ross what best solution is for this
                 //Serial.println("Guitar ");
                 mixer9.gain(2, 1);
                 mixer9.gain(1, 1);
                 mixer9.gain(0, 1);
                 mixer9.gain(3, 1);
-                int twelve = 12;
-                int twentyfour = 24;
                 if (toggle == true) { //gate alternates between true and false
-                        if (constX > 61 && gateTrig ==true){ //if ts being touched and gate is true
+                        if (constX > 61 && gateTrig ==true) { //if ts being touched and gate is true
 
-                        string1.noteOn(mtof(scale[noteSelect] + baseOctave + transpose),1);
-                        string2.noteOn(mtof(scale[noteSelect] - 12 + baseOctave + transpose),1);
-                        //string2.noteOn(500,1);
-                        //string1.noteOn(1200,1);
+                                string1.noteOn(mtof(scale[noteSelect] + baseOctave + transpose),1);
+                                string2.noteOn(mtof(scale[noteSelect] - 12 + baseOctave + transpose),1);
 
-
-                        gateTrig = false;
-                        //Serial.println("NoteOn");
-
+                                gateTrig = false;
+                                //Serial.println("NoteOn");
+                        }
                 }
-              }
-              //would like to add tempo mod to this (look at Ross divide % function)
                 if (toggle == false) {
-                  if (constX > 61 && gateTrig ==true){
-                    string1.noteOn(mtof(scale[noteSelect] - 15 + baseOctave + transpose),1);
-                    string2.noteOn(mtof(scale[noteSelect] - 12 + baseOctave + transpose),1);
-
-                        //string1.noteOff(0.8);
-                     gateTrig = false;
-                     //Serial.println("NoteOff");
-                   }
+                        if (constX > 61 && gateTrig ==true) {
+                                string1.noteOn(mtof(scale[noteSelect] - 15 + baseOctave + transpose),1);
+                                string2.noteOn(mtof(scale[noteSelect] - 12 + baseOctave + transpose),1);
+                                //string1.noteOff(0.8);
+                                gateTrig = false;
+                        }
                 }
-
                 //Y mapped for bitcrushing
                 int BitsMappedY = map(constY, 97, 910, 6, 16);
                 int sRateMappedY = map(constY, 97, 910,  1, 44100);
                 //Serial.print("sRateMappedY = "); Serial.println(sRateMappedY);
                 bitcrusher1.bits(16);//(BitsMappedY);    //bitcrusher1.bits(16);
                 bitcrusher1.sampleRate(sRateMappedY);       //bitcrusher1.sampleRate(44100);
-                //string2. if needed
         }
 
 /////////////////////////////////WAVEFORM & FILTER
-        else if (selectionValue > 257 && selectionValue < 512) { //waveform LPF & HPF mixer: waveform4,5,6 > envelope2 > filter2 w/ waveform7 input >
+        if (selectionValue > 257 && selectionValue < 512) { //waveform LPF & HPF mixer: waveform4,5,6 > envelope2 > filter2 w/ waveform7 input >
 //waveform frequency is not being changed by noteSelect..
                 //Serial.println("Waveform & Filter");
                 mixer12.gain(0, 1); //LPF//set gain for other channels
                 mixer12.gain(1, 0); //BPF
                 mixer12.gain(2, 0); //HPF
-                waveform6.begin(WAVEFORM_SINE); //X
-                waveform7.begin(WAVEFORM_TRIANGLE); //X
-              //  waveform8.begin(0, (noteSelect), WAVEFORM_SINE); //X
+                waveform6.begin(1, mtof(scale[noteSelect] + baseOctave + transpose), WAVEFORM_SINE); //X
+                //waveform7.begin(1, mtof(scale[noteSelect] + baseOctave + transpose),WAVEFORM_TRIANGLE); //X
+                //waveform8.begin(1, mtof(scale[noteSelect] + baseOctave + transpose),WAVEFORM_SQUARE); //X
 
                 //Y mapped for LPF/HPF controlled by waveform input: F = Fcenter * 2^(signal * octaves)
-                int LPF_Y = map(constY, 97, 910, 28, 3186);  //change to Filter waveform frequency range
+                int LPF_Y = map(constY, 97, 910, 28, 20000);  //change to Filter waveform frequency range
+                float PWM = map(constY, 97, 910, -1, 1);
                 //Serial.print("LPF_Y = "); Serial.println(LPF_Y);
 
+                pwm1.frequency(PWM);
+                pwm1.amplitude(.8);
+                envelope6.attack(0);
+                envelope6.hold(0);
+                envelope6.decay(200);
+                envelope6.sustain(1);
+                envelope6.release(200);
+                //envelope6.decay(TsPot2);
+
                 // waveform frequency mod filter
-                waveform13.begin(1, LPF_Y, WAVEFORM_SINE);
-                waveform13.amplitude(1.0);
-                waveform13.frequency(LPF_Y);
+                // waveform13.begin(1, LPF_Y, WAVEFORM_SINE);
+                // waveform13.amplitude(1.0);
+                // waveform13.frequency(LPF_Y);
+
+                filter8.frequency(200); //corner frequency controlled by LPF_Y
+                filter8.resonance(2); //.7 - 5.0 attenuate beforehand to prevent clipping
+                filter8.octaveControl(2); //0-7 octave range. sets attenuation range for filters corner frequency.
 
 
                 int arpegg = 0;
-              //for (int x = 0; x < 2; x++) {
-                if(gateTrig == true){
-                if (constX > 61 && arpegg == 0) {  //if being touched and trig is true..
-                      //Serial.println("envelope.noteON");
-                        waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
-                        waveform6.amplitude(1.0);
-                        waveform7.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
-                        waveform7.amplitude(1.0);
-                        //waveform8.frequency(freq);
-                        //waveform8.amplitude();
-                        //waveformX.pulseWidth(amount); ??
-                        //waveformX.phase(angle); ??
+                if(gateTrig == true) {
+                        if (constX > 61 && arpegg == 0) { //if being touched and trig is true..
+                                //Serial.println(arpegg);
+                                waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+                                //waveform7.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+                                //waveform8.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+                                //waveformX.pulseWidth(amount); ??
+                                //waveformX.phase(angle); ??
 
-                        //waveform6-8 controlled by envelope6
-                        envelope6.noteOn();
-                        envelope6.attack(0);
-                        envelope6.hold(0);
-                        envelope6.decay(200);
-                        envelope6.sustain(1);
-                        envelope6.noteOff();
-                        envelope6.release(200);
-                        //envelope6.decay(TsPot2);
+                                //waveform6-8 controlled by envelope6
+                                envelope6.noteOn();
+                                envelope6.noteOff();
 
+                                arpegg++;
+                                gateTrig = false;
+                        }
+                        if (constX > 61 && arpegg == 1) { //if being touched and trig is true..
+                          //Serial.println(arpegg);
+                                waveform6.frequency(mtof(scale[noteSelect] - 3 + baseOctave + transpose));
+                                //waveform7.frequency(mtof(scale[noteSelect] - 3 + baseOctave + transpose));
+                                //waveform8.frequency(mtof(scale[noteSelect] - 3 + baseOctave + transpose));
+                                //waveformX.pulseWidth(amount); ??
+                                //waveformX.phase(angle); ??
 
+                                //waveform6-8 controlled by envelope6
+                                envelope6.noteOn();
+                                envelope6.noteOff();
 
-                        filter8.frequency(200); //corner frequency
-                        filter8.resonance(.5); //.7 - 5.0 attenuate beforehand to prevent clipping
-                        filter8.octaveControl(2); //0-7 octave range. sets attenuation range for filters corner frequency.
+                                arpegg++;
+                                gateTrig = false;
+                        }
+                        if (constX > 61 && arpegg == 2) { //if being touched and trig is true..
+                          //Serial.println(arpegg);
+                                waveform6.frequency(mtof(scale[noteSelect] - 5 + baseOctave + transpose));
+                                //waveform7.frequency(mtof(scale[noteSelect] - 5 + baseOctave + transpose));
+                                //waveform8.frequency(mtof(scale[noteSelect] - 5 + baseOctave + transpose));
+                                //waveformX.pulseWidth(amount); ??
+                                //waveformX.phase(angle); ??
 
-                        arpegg++;
-                        gateTrig = false;
+                                //waveform6-8 controlled by envelope6
+                                envelope6.noteOn();
+                                envelope6.noteOff();
+
+                                arpegg = 0;
+                                gateTrig = false;
+                        }
+
                 }
-                if (constX > 61 && arpegg == 1) {  //if being touched and trig is true..
-                      //Serial.println("envelope.noteON");
-                        waveform6.frequency(mtof(scale[noteSelect] + 3 + baseOctave + transpose));
-                        waveform6.amplitude(1.0);
-                        waveform7.frequency(mtof(scale[noteSelect] + 3 + baseOctave + transpose));
-                        waveform7.amplitude(1.0);
-                        //waveform8.frequency(freq);
-                        //waveform8.amplitude();
-                        //waveformX.pulseWidth(amount); ??
-                        //waveformX.phase(angle); ??
-
-                        //waveform6-8 controlled by envelope6
-                        envelope6.noteOn();
-                        envelope6.attack(0);
-                        envelope6.hold(0);
-                        envelope6.decay(200);
-                        envelope6.sustain(1);
-                        envelope6.noteOff();
-                        envelope6.release(200);
-                        //envelope6.decay(TsPot2);
-
-                        filter8.frequency(200); //corner frequency
-                        filter8.resonance(.5); //.7 - 5.0 attenuate beforehand to prevent clipping
-                        filter8.octaveControl(2); //0-7 octave range. sets attenuation range for filters corner frequency.
-
-                        arpegg++;
-                        gateTrig = false;
-                }
-                if (constX > 61 && arpegg == 2) {  //if being touched and trig is true..
-                      //Serial.println("envelope.noteON");
-                        waveform6.frequency(mtof(scale[noteSelect] + 5 + baseOctave + transpose));
-                        waveform6.amplitude(1.0);
-                        waveform7.frequency(mtof(scale[noteSelect] + 5 + baseOctave + transpose));
-                        waveform7.amplitude(1.0);
-                        //waveform8.frequency(freq);
-                        //waveform8.amplitude();
-                        //waveformX.pulseWidth(amount); ??
-                        //waveformX.phase(angle); ??
-
-                        //waveform6-8 controlled by envelope6
-                        envelope6.noteOn();
-                        envelope6.attack(0);
-                        envelope6.hold(0);
-                        envelope6.decay(200);
-                        envelope6.sustain(1);
-                        envelope6.noteOff();
-                        envelope6.release(200);
-                        //envelope6.decay(TsPot2);
-
-                        filter8.frequency(10); //corner frequency
-                        filter8.resonance(.7); //.7 - 5.0 attenuate beforehand to prevent clipping
-                        filter8.octaveControl(4); //0-7 octave range. sets attenuation range for filters corner frequency.
-
-                        arpegg = 0;
-                        gateTrig = false;
-                }
-
-        }
 
 /*
                 if (constX > 61 && toggle ==true) {  //if being touched and trig is true..
@@ -1442,13 +1409,14 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
                         //  waveform6.amplitude(0);
                         envelope6.noteOff();
                 }
-                */
+ */
         }
 //////////////////////////////////
+/*
         else if (selectionValue > 513 && selectionValue < 768) { //waveform chord mixer waveform 1&2 > envelope1 > out
                // Serial.print("waveform chord mixer");
-/*
-//Reference this logic for triggering along with master clock
+   //
+   //Reference this logic for triggering along with master clock
                   if (toggle == true) { //gate alternates between true and false
                           if (constX > 61 && gateTrig ==true){ //if ts being touched and gate is true
 
@@ -1466,7 +1434,7 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
                        Serial.println("NoteOff");
                      }
                   }
-*/
+   //
               if (p.x > 60) { //begin playing when touched
                   waveform11.begin(1.0, mtof(scale[noteSelect] + baseOctave + transpose), WAVEFORM_SINE);
                   waveform12.begin(1.0, mtof(scale[noteSelect] + baseOctave + transpose), WAVEFORM_TRIANGLE);
@@ -1503,4 +1471,5 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
                 }
 
         }
+ */
 }
