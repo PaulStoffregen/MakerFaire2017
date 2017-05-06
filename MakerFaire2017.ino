@@ -455,6 +455,8 @@ void setup() {
         waveform9.begin(.25, 0, WAVEFORM_SAWTOOTH);
 
         envelope6.sustain(0);
+        envelope6.attack(1.5);
+        envelope6.hold(0.5);
 
         // Master notch filter
 
@@ -1259,23 +1261,25 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
         //Serial.print(" p.x = "); Serial.print(p.x);
         //Serial.print("p.y = "); Serial.print(p.y);
         //int envelope6Control = map(analogRead(TsPot2), 0, 1023, 0.00, 2.00);
-        float envelope6Control = float(analogRead(TsPot2)) / 511.5;
+  //      float envelope6Control = float(analogRead(TsPot2)) / 511.5;
+        int envelope6Control = (analogRead(TsPot2));
         envelope6.decay(envelope6Control);
-        Serial.print(" envelope6Control = "); Serial.print(envelope6Control);
+  //      envelope6.decay(envelope6Control);
+      //  Serial.print(" envelope6Control = "); Serial.print(envelope6Control);
 
         int touchXClamped = constrain(p.x, 40, 985); // A7
         int touchX = map(touchXClamped, 985, 40, 0, 100);
-        Serial.print(" touchX = "); Serial.print(touchX);
+      //  Serial.print(" touchX = "); Serial.print(touchX);
         int touchYClamped = constrain(p.y, 500, 9251);
         int touchY = map(touchYClamped, 500, 9251, 0, 100); //A6
-        Serial.print(" touchY = "); Serial.print(touchY);
+      //  Serial.print(" touchY = "); Serial.print(touchY);
 
         int noteSelectY = map(touchY, 0, 100, 7, 20);
         noteSelect = map(touchX, 0, 100, 7, 20);
-        Serial.print (" noteSelect = "); Serial.println(noteSelect);
+      //  Serial.print (" noteSelect = "); Serial.println(noteSelect);
         //waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
         modeSelect = map(analogRead(selectionPin), 0, 1023, 1, 3);
-        Serial.print(modeSelect);
+      //  Serial.print(modeSelect);
         //A20 this is used to select the different synth options in lieu of a button/rotary interaface.
 
         scale[1] = chord[0] - 12;
@@ -1396,7 +1400,7 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
 
                                 if(sinceRightTrigger > 200) {
                                         envelope6.noteOff();
-                                        sinceRightTrigger = 0;
+                              //          sinceRightTrigger = 0;
                                 }
                                 //arpegg++;
                                 gateTrig = false;
@@ -1416,7 +1420,7 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
                                 //envelope6.noteOn();
                                 if(sinceRightTrigger > 200) {
                                         envelope6.noteOff();
-                                        sinceRightTrigger = 0;
+                              //          sinceRightTrigger = 0;
                                 }
                                 //arpegg++;
                                 gateTrig = false;
@@ -1436,7 +1440,7 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
                                 //envelope6.noteOn();
                                 if(sinceRightTrigger > 200) {
                                         envelope6.noteOff();
-                                        sinceRightTrigger = 0;
+                              //          sinceRightTrigger = 0;
 
                                 }
                                 //arpegg = 0;
@@ -1536,7 +1540,7 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
                                     //waveform9.amplitude(1);
                                     //waveform10.amplitude(1);
                                         //Serial.print("noteOffffff");
-                                        sinceRightTrigger = 0;
+                                    //    sinceRightTrigger = 0;
 
 
                                 }
