@@ -469,13 +469,262 @@ void setup() {
 
 void rightTrigger() {
         //noteTrig= true;     // Ben's sequencer calls this
-        gateTrig = true;
         toggle = !toggle;  ///DRC
-        Serial.print("trigger");
+        //Serial.print("trigger");
         sinceRightTrigger = 0;
         arpegg++;
         if(arpegg == 3) {
                 arpegg = 0;
+        }
+		        TSPoint p = ts.getPoint(); // a point object holds p.x, p.y, and p.z coordinates
+		int touchXClamped = constrain(p.x, 40, 985); // A7
+        int touchX = map(touchXClamped, 985, 40, 0, 100);
+      //  Serial.print(" touchX = "); Serial.print(touchX);
+        int touchYClamped = constrain(p.y, 40, 920);
+        int touchY = map(touchYClamped, 40, 920, 0, 100); //A6
+      //  Serial.print(" touchY = "); Serial.print(touchY);
+
+        int noteSelectY = map(touchY, 0, 100, 7, 20);
+		Serial.println(touchY);
+        noteSelect = map(touchX, 0, 100, 7, 20);
+		 if (modeSelect == 1) { //GUITAR w/ distortion patch: string1&2 > bitcrusher1
+                //Serial.println("Guitar ");
+                //OFF
+                mixer13.gain(1, 0);
+
+                //ON
+                mixer13.gain(0, 1); //put global
+                envelope6.noteOn();
+
+
+                        if (touchX < 100) { //if ts being touched and gate is true
+
+                                string1.noteOn(mtof(scale[noteSelect] + baseOctave + transpose - 12), .25);
+                                //string2.noteOn(mtof(scale[noteSelect] + baseOctave + transpose) - 12.05, 1);
+
+                                gateTrig = false;
+                              //  Serial.println("111");
+                        }
+
+
+                        if (touchX < 100) {
+                                //string1.noteOn(mtof(scale[noteSelect] + baseOctave + transpose) - 24, 1);
+                                string2.noteOn(mtof(scale[noteSelect] + baseOctave + transpose - 24), .25);
+                                //string1.noteOff(0.8);
+                                gateTrig = false;
+                                //Serial.println("222");
+
+                        }
+
+                //Y mapped for bitcrushing
+              //  int touchYClamped = constrain(touchY, 0, 100);
+                //Serial.print("touchYClamped = "); Serial.print(touchYClamped);
+
+                int BitsMappedY = map(touchY, 0, 100, 8, 16);
+                //int sRateMappedY = map(p.y, 1023, 600,  33100, 1);  //what kind of formula could I use to make the bitcrushingsound good across all frequencies?
+                int sRateMappedY = map(touchY, 0, 100,  22000, 6000);  //what kind of formula could I use to make the bitcrushingsound good across all frequencies?
+
+                //Serial.print("sRateMappedY = "); Serial.print(sRateMappedY);
+                bitcrusher1.bits(BitsMappedY);//(BitsMappedY);    //bitcrusher1.bits(16);
+                bitcrusher1.sampleRate(sRateMappedY);       //bitcrusher1.sampleRate(44100);
+        }
+
+/////////////////////////////////WAVEFORM & FILTER
+        if (modeSelect == 2) { //waveform LPF & HPF mixer: waveform4,5,6 > envelope2 > filter2 w/ waveform7 input >
+//waveform frequency is not being changed by noteSelect..
+                //Serial.println("Waveform & Filter");
+                //mixer12.gain(0, 1); //LPF//set gain for other channels
+                //mixer12.gain(1, 0); //BPF
+                //mixer12.gain(2, 0); //HPF
+                //waveform6.begin(1, 1, WAVEFORM_SINE); //X
+                //waveform7.begin(1, mtof(scale[noteSelect] + baseOctave + transpose),WAVEFORM_TRIANGLE); //X
+                //waveform8.begin(1, mtof(scale[noteSelect] + baseOctave + transpose),WAVEFORM_SQUARE); //X
+
+                //Y mapped for LPF/HPF controlled by waveform input: F = Fcenter * 2^(signal * octaves)
+                //  int LPF_Y = map(touchY, 97, 910, 28, 20000);  //change to Filter waveform frequency range
+                //float PWM = ( map(touchY, 97, 910, 50.00, 0)/ 10.00);
+                //  int decayControl = map(analogRead(TsPot2), 0, 1023, 0, 30);
+                //Serial.print("PWM = "); Serial.print(PWM);
+                //Serial.print("LPF_Y = "); Serial.print(LPF_Y);
+
+                  pwm1.frequency(mtof(scale[noteSelect] + baseOctave + transpose-24));
+
+                //OFF
+                mixer13.gain(0, 0);
+                mixer13.gain(2, 0);
+                //ON
+                mixer13.gain(1, 1);
+                envelope6.noteOn();
+
+                pwm1.amplitude(0.18);
+                waveform8.amplitude(0.8);
+				waveform8.frequency(float(touchY)/60);
+
+
+              //  if(gateTrig == true) {
+                        if (touchX < 100 && arpegg == 0) { //if being touched and trig is true..
+                                //  Serial.print(arpegg);
+                                // mixer12.gain(0, 1); //LPF//set gain for other channels
+                                // mixer12.gain(1, 0); //BPF
+                                // mixer12.gain(2, 0); //HPF
+                                waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose - 12));
+                                //waveform7.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+                                //waveform8.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+                                //waveformX.pulseWidth(amount); ??
+                                //waveformX.phase(angle); ??
+
+                                //waveform6-8 controlled by envelope6
+                                //envelope6.noteOn();
+
+                                if(sinceRightTrigger > 200) {
+                                        envelope6.noteOff();
+                              //          sinceRightTrigger = 0;
+                                }
+                                //arpegg++;
+                                gateTrig = false;
+                        }
+                        if (touchX < 100 && arpegg == 1) { //if being touched and trig is true..
+                                //Serial.print(arpegg);
+                                //      mixer12.gain(0, 1); //LPF//set gain for other channels
+                                //      mixer12.gain(1, 0); //BPF
+                                //      mixer12.gain(2, 0); //HPF
+                                waveform6.frequency(mtof(scale[noteSelect -1] + baseOctave + transpose - 12));
+                                //waveform7.frequency(mtof(scale[noteSelect] - 3 + baseOctave + transpose));
+                                //waveform8.frequency(mtof(scale[noteSelect] - 3 + baseOctave + transpose));
+                                //waveformX.pulseWidth(amount); ??
+                                //waveformX.phase(angle); ??
+
+                                //waveform6-8 controlled by envelope6
+                                //envelope6.noteOn();
+                                if(sinceRightTrigger > 200) {
+                                        envelope6.noteOff();
+                              //          sinceRightTrigger = 0;
+                                }
+                                //arpegg++;
+                                gateTrig = false;
+                        }
+                        if (touchX < 100 && arpegg == 2) { //if being touched and trig is true..
+                                //  Serial.print(arpegg);
+                                //            mixer12.gain(0, 1); //LPF//set gain for other channels
+                                //            mixer12.gain(1, 0); //BPF
+                                //            mixer12.gain(2, 0); //HPF
+                                waveform6.frequency(mtof(scale[noteSelect -2] + baseOctave + transpose - 12));
+                                //waveform7.frequency(mtof(scale[noteSelect] - 5 + baseOctave + transpose));
+                                //waveform8.frequency(mtof(scale[noteSelect] - 5 + baseOctave + transpose));
+                                //waveformX.pulseWidth(amount); ??
+                                //waveformX.phase(angle); ??
+
+                                //waveform6-8 controlled by envelope6
+                                //envelope6.noteOn();
+                                if(sinceRightTrigger > 200) {
+                                        envelope6.noteOff();
+                              //          sinceRightTrigger = 0;
+
+                                }
+                                //arpegg = 0;
+                                gateTrig = false;
+                        }
+                        if (touchX == 100) {
+                                envelope6.noteOff();
+                                //          mixer12.gain(0, 0); //LPF//set gain for other channels
+                                //          mixer12.gain(1, 0); //BPF
+                                //          mixer12.gain(2, 0); //HPF
+
+                        }
+
+              //  }
+
+/*
+                if (touchX > 61 && toggle ==true) {  //if being touched and trig is true..
+                      //Serial.println("envelope.noteON");
+                        waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+                        waveform6.amplitude(1.0);
+                        //waveform7.frequency(freq);
+                        //waveform7.amplitude();
+                        //waveform8.frequency(freq);
+                        //waveform8.amplitude();
+                        //waveformX.pulseWidth(amount); ??
+                        //waveformX.phase(angle); ??
+
+                        //waveform6-8 controlled by envelope6
+                        envelope6.noteOn();
+                        envelope6.attack(0);
+                        envelope6.hold(0);
+                        envelope6.decay(200);
+                        envelope6.sustain(1);
+                        envelope6.noteOff();
+                        envelope6.release(200);
+                        //envelope6.decay(TsPot2);
+
+                        filter8.frequency(200);
+                        filter8.resonance(.5); //.7 - 5.0 attenuate beforehand to prevent clipping
+                        filter8.octaveControl(2); 0-7 octave range. sets attenuation range for filters corner frequency.
+
+                        // waveform frequency mod filter
+                        waveform13.amplitude(1.0);
+                        waveform13.frequency(LPF_Y);
+                        //gateTrig = false;
+
+                }
+                if (touchX > 61 && toggle == false) {
+                  //Serial.println("envelope.noteOFF");
+                        //waveform6.amplitude(0);
+                        envelope6.noteOff();
+                        envelope6.hold(250);
+                        envelope6.decay(500);
+                }
+                else if (touchX < 61) {
+                  //Serial.println("NoTouch");
+                        //  waveform6.amplitude(0);
+                        envelope6.noteOff();
+                }
+ */
+        }
+//////////////////////////////////
+
+
+
+        if (modeSelect == 3) { //waveform chord mixer waveform 1&2 > envelope1 > o
+                // Serial.print("waveform chord mixer");
+
+                //OFF
+                mixer13.gain(1, 0); //LPF//set gain for other channels
+                //ON
+                mixer13.gain(2, 1);
+                        if (touchX < 100) { //if being touched and trig is true..
+						envelope6.noteOn();
+                                //Serial.print(arpegg);
+                                // mixer12.gain(0, 1); //LPF//set gain for other channels
+                                //waveform9.amplitude(1);
+                                //waveform10.amplitude(1);
+                            //    waveform11.amplitude(1);
+                          //      waveform12.amplitude(1);
+                                waveform9.frequency(mtof(scale[noteSelectY] + baseOctave + transpose));
+                                waveform10.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+                                //waveform11.frequency(mtof(scale[noteSelectY] + baseOctave + transpose) - 12.5);
+                                //waveform12.frequency(mtof(scale[noteSelect] + baseOctave + transpose) - 24.5);
+
+                                //waveformX.pulseWidth(amount); ??
+                                //waveformX.phase(angle); ??
+                                //waveform6-8 controlled by envelope6
+                                //envelope6.noteOn();
+
+                              }
+
+                                //arpegg++;
+                         // end if(gateTrigger)
+                        if(touchX > 99) {
+                          // waveform9.amplitude(0);
+                          // waveform10.amplitude(0);
+                          // waveform11.amplitude(0);
+                          // waveform12.amplitude(0);
+
+                         envelope6.noteOff();
+                      //   envelope7.noteOff();
+                        }
+
+
+
         }
 }
 
@@ -1257,7 +1506,6 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
   //      Serial.print(modeSelect);
         int rightTimeSelection=map(analogRead(A17),0,1023,0,5);
         rightTiming=timingValues[int(rightTimeSelection)];
-        TSPoint p = ts.getPoint(); // a point object holds p.x, p.y, and p.z coordinates
         //Serial.print(" p.x = "); Serial.print(p.x);
         //Serial.print("p.y = "); Serial.print(p.y);
         //int envelope6Control = map(analogRead(TsPot2), 0, 1023, 0.00, 2.00);
@@ -1267,15 +1515,7 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
   //      envelope6.decay(envelope6Control);
       //  Serial.print(" envelope6Control = "); Serial.print(envelope6Control);
 
-        int touchXClamped = constrain(p.x, 40, 985); // A7
-        int touchX = map(touchXClamped, 985, 40, 0, 100);
-      //  Serial.print(" touchX = "); Serial.print(touchX);
-        int touchYClamped = constrain(p.y, 500, 9251);
-        int touchY = map(touchYClamped, 500, 9251, 0, 100); //A6
-      //  Serial.print(" touchY = "); Serial.print(touchY);
-
-        int noteSelectY = map(touchY, 0, 100, 7, 20);
-        noteSelect = map(touchX, 0, 100, 7, 20);
+        
       //  Serial.print (" noteSelect = "); Serial.println(noteSelect);
         //waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
         modeSelect = map(analogRead(selectionPin), 0, 1023, 1, 3);
@@ -1310,259 +1550,8 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
         //sine1.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
         //Serial.print("modeSelect"); Serial.println(modeSelect);
 ///////////////////////////GUITAR & BITCRUSHING
-        if (modeSelect == 1) { //GUITAR w/ distortion patch: string1&2 > bitcrusher1
-                //Serial.println("Guitar ");
-                //OFF
-                mixer13.gain(1, 0);
-
-                //ON
-                mixer13.gain(0, 1); //put global
-                envelope6.noteOn();
-
-
-                        if (touchX < 100 && gateTrig == true && toggle == true) { //if ts being touched and gate is true
-
-                                string1.noteOn(mtof(scale[noteSelect] + baseOctave + transpose - 12), .25);
-                                //string2.noteOn(mtof(scale[noteSelect] + baseOctave + transpose) - 12.05, 1);
-
-                                gateTrig = false;
-                              //  Serial.println("111");
-                        }
-
-
-                        if (touchX < 100 && gateTrig == true && toggle == false) {
-                                //string1.noteOn(mtof(scale[noteSelect] + baseOctave + transpose) - 24, 1);
-                                string2.noteOn(mtof(scale[noteSelect] + baseOctave + transpose - 24), .25);
-                                //string1.noteOff(0.8);
-                                gateTrig = false;
-                                //Serial.println("222");
-
-                        }
-
-                //Y mapped for bitcrushing
-              //  int touchYClamped = constrain(touchY, 0, 100);
-                //Serial.print("touchYClamped = "); Serial.print(touchYClamped);
-
-                int BitsMappedY = map(touchY, 0, 100, 0, 16);
-                //int sRateMappedY = map(p.y, 1023, 600,  33100, 1);  //what kind of formula could I use to make the bitcrushingsound good across all frequencies?
-                int sRateMappedY = map(touchY, 0, 100,  33100, 1);  //what kind of formula could I use to make the bitcrushingsound good across all frequencies?
-
-                //Serial.print("sRateMappedY = "); Serial.print(sRateMappedY);
-                bitcrusher1.bits(16);//(BitsMappedY);    //bitcrusher1.bits(16);
-                bitcrusher1.sampleRate(sRateMappedY);       //bitcrusher1.sampleRate(44100);
-        }
-
-/////////////////////////////////WAVEFORM & FILTER
-        if (modeSelect == 2) { //waveform LPF & HPF mixer: waveform4,5,6 > envelope2 > filter2 w/ waveform7 input >
-//waveform frequency is not being changed by noteSelect..
-                //Serial.println("Waveform & Filter");
-                //mixer12.gain(0, 1); //LPF//set gain for other channels
-                //mixer12.gain(1, 0); //BPF
-                //mixer12.gain(2, 0); //HPF
-                //waveform6.begin(1, 1, WAVEFORM_SINE); //X
-                //waveform7.begin(1, mtof(scale[noteSelect] + baseOctave + transpose),WAVEFORM_TRIANGLE); //X
-                //waveform8.begin(1, mtof(scale[noteSelect] + baseOctave + transpose),WAVEFORM_SQUARE); //X
-
-                //Y mapped for LPF/HPF controlled by waveform input: F = Fcenter * 2^(signal * octaves)
-                //  int LPF_Y = map(touchY, 97, 910, 28, 20000);  //change to Filter waveform frequency range
-                //float PWM = ( map(touchY, 97, 910, 50.00, 0)/ 10.00);
-                //  int decayControl = map(analogRead(TsPot2), 0, 1023, 0, 30);
-                //Serial.print("PWM = "); Serial.print(PWM);
-                //Serial.print("LPF_Y = "); Serial.print(LPF_Y);
-
-                //  pwm1.frequency(mtof(scale[noteSelect] + baseOctave + transpose) + PWM);
-
-                //OFF
-                mixer13.gain(0, 0);
-                mixer13.gain(2, 0);
-                //ON
-                mixer13.gain(1, 1);
-                envelope6.noteOn();
-
-                pwm1.amplitude(0);
-                waveform8.amplitude(1);
-
-
-              //  if(gateTrig == true) {
-                        if (touchX < 100 && arpegg == 0 && gateTrig == true) { //if being touched and trig is true..
-                                //  Serial.print(arpegg);
-                                // mixer12.gain(0, 1); //LPF//set gain for other channels
-                                // mixer12.gain(1, 0); //BPF
-                                // mixer12.gain(2, 0); //HPF
-                                waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose - 12));
-                                //waveform7.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
-                                //waveform8.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
-                                //waveformX.pulseWidth(amount); ??
-                                //waveformX.phase(angle); ??
-
-                                //waveform6-8 controlled by envelope6
-                                //envelope6.noteOn();
-
-                                if(sinceRightTrigger > 200) {
-                                        envelope6.noteOff();
-                              //          sinceRightTrigger = 0;
-                                }
-                                //arpegg++;
-                                gateTrig = false;
-                        }
-                        if (touchX < 100 && arpegg == 1 && gateTrig == true) { //if being touched and trig is true..
-                                //Serial.print(arpegg);
-                                //      mixer12.gain(0, 1); //LPF//set gain for other channels
-                                //      mixer12.gain(1, 0); //BPF
-                                //      mixer12.gain(2, 0); //HPF
-                                waveform6.frequency(mtof(scale[noteSelect -1] + baseOctave + transpose - 12));
-                                //waveform7.frequency(mtof(scale[noteSelect] - 3 + baseOctave + transpose));
-                                //waveform8.frequency(mtof(scale[noteSelect] - 3 + baseOctave + transpose));
-                                //waveformX.pulseWidth(amount); ??
-                                //waveformX.phase(angle); ??
-
-                                //waveform6-8 controlled by envelope6
-                                //envelope6.noteOn();
-                                if(sinceRightTrigger > 200) {
-                                        envelope6.noteOff();
-                              //          sinceRightTrigger = 0;
-                                }
-                                //arpegg++;
-                                gateTrig = false;
-                        }
-                        if (touchX < 100 && arpegg == 2 && gateTrig == true) { //if being touched and trig is true..
-                                //  Serial.print(arpegg);
-                                //            mixer12.gain(0, 1); //LPF//set gain for other channels
-                                //            mixer12.gain(1, 0); //BPF
-                                //            mixer12.gain(2, 0); //HPF
-                                waveform6.frequency(mtof(scale[noteSelect -2] + baseOctave + transpose - 12));
-                                //waveform7.frequency(mtof(scale[noteSelect] - 5 + baseOctave + transpose));
-                                //waveform8.frequency(mtof(scale[noteSelect] - 5 + baseOctave + transpose));
-                                //waveformX.pulseWidth(amount); ??
-                                //waveformX.phase(angle); ??
-
-                                //waveform6-8 controlled by envelope6
-                                //envelope6.noteOn();
-                                if(sinceRightTrigger > 200) {
-                                        envelope6.noteOff();
-                              //          sinceRightTrigger = 0;
-
-                                }
-                                //arpegg = 0;
-                                gateTrig = false;
-                        }
-                        if (touchX == 100) {
-                                envelope6.noteOff();
-                                //          mixer12.gain(0, 0); //LPF//set gain for other channels
-                                //          mixer12.gain(1, 0); //BPF
-                                //          mixer12.gain(2, 0); //HPF
-
-                        }
-
-              //  }
-
-/*
-                if (touchX > 61 && toggle ==true) {  //if being touched and trig is true..
-                      //Serial.println("envelope.noteON");
-                        waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
-                        waveform6.amplitude(1.0);
-                        //waveform7.frequency(freq);
-                        //waveform7.amplitude();
-                        //waveform8.frequency(freq);
-                        //waveform8.amplitude();
-                        //waveformX.pulseWidth(amount); ??
-                        //waveformX.phase(angle); ??
-
-                        //waveform6-8 controlled by envelope6
-                        envelope6.noteOn();
-                        envelope6.attack(0);
-                        envelope6.hold(0);
-                        envelope6.decay(200);
-                        envelope6.sustain(1);
-                        envelope6.noteOff();
-                        envelope6.release(200);
-                        //envelope6.decay(TsPot2);
-
-                        filter8.frequency(200);
-                        filter8.resonance(.5); //.7 - 5.0 attenuate beforehand to prevent clipping
-                        filter8.octaveControl(2); 0-7 octave range. sets attenuation range for filters corner frequency.
-
-                        // waveform frequency mod filter
-                        waveform13.amplitude(1.0);
-                        waveform13.frequency(LPF_Y);
-                        //gateTrig = false;
-
-                }
-                if (touchX > 61 && toggle == false) {
-                  //Serial.println("envelope.noteOFF");
-                        //waveform6.amplitude(0);
-                        envelope6.noteOff();
-                        envelope6.hold(250);
-                        envelope6.decay(500);
-                }
-                else if (touchX < 61) {
-                  //Serial.println("NoTouch");
-                        //  waveform6.amplitude(0);
-                        envelope6.noteOff();
-                }
- */
-        }
-//////////////////////////////////
-
-
-
-        if (modeSelect == 3) { //waveform chord mixer waveform 1&2 > envelope1 > o
-                // Serial.print("waveform chord mixer");
-
-                //OFF
-                mixer13.gain(1, 0); //LPF//set gain for other channels
-                //ON
-                mixer13.gain(2, 1);
-                envelope6.noteOn();
-
-                if(gateTrig == true) {
-                        if (touchX < 100) { //if being touched and trig is true..
-                                //Serial.print(arpegg);
-                                // mixer12.gain(0, 1); //LPF//set gain for other channels
-                                //waveform9.amplitude(1);
-                                //waveform10.amplitude(1);
-                            //    waveform11.amplitude(1);
-                          //      waveform12.amplitude(1);
-                                waveform9.frequency(mtof(scale[noteSelectY] + baseOctave + transpose));
-                                waveform10.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
-                                //waveform11.frequency(mtof(scale[noteSelectY] + baseOctave + transpose) - 12.5);
-                                //waveform12.frequency(mtof(scale[noteSelect] + baseOctave + transpose) - 24.5);
-
-                                //waveformX.pulseWidth(amount); ??
-                                //waveformX.phase(angle); ??
-                                gateTrig = false;
-
-                                //waveform6-8 controlled by envelope6
-                                //envelope6.noteOn();
-                                Serial.print(sinceRightTrigger);
-                                if(sinceRightTrigger > 200) {
-                                        envelope6.noteOff();
-                                    //waveform9.amplitude(1);
-                                    //waveform10.amplitude(1);
-                                        //Serial.print("noteOffffff");
-                                    //    sinceRightTrigger = 0;
-
-
-                                }
-
-                              }
-
-                                //arpegg++;
-                        } // end if(gateTrigger)
-                        if(touchX > 99) {
-                          // waveform9.amplitude(0);
-                          // waveform10.amplitude(0);
-                          // waveform11.amplitude(0);
-                          // waveform12.amplitude(0);
-
-                         envelope6.noteOff();
-                      //   envelope7.noteOff();
-                        }
-
-
-
-        }
+       
  //
-  Serial.println(" ");
+  //Serial.println(" ");
 
 }
