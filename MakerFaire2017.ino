@@ -6,78 +6,95 @@
 #include <stdint.h>  //touchscreeen
 #include "TouchScreen.h"
 #include <Bounce.h>
-#include "AudioSampleDt_kick.h"
-#include "AudioSampleDt_cowbell.h"
-#include "AudioSampleDt_snare.h"
-#include "AudioSampleDt_tamborine.h"
-#include "AudioSampleDt_closedhat.h"
-#include "AudioSampleVer04wavfcus.h"
-#include "AudioSampleShaker.h"
-#include "AudioSampleDt_clap.h"
-#include "AudioSampleCastinet.h"
-#include "AudioSampleDt_rimshot.h"
+#include "AudioSampleKick1.h"
+#include "AudioSampleHat1.h"
+#include "AudioSampleHat2.h"
+#include "AudioSampleHat3.h"
+#include "AudioSampleHat4.h"
+#include "AudioSampleHat5.h"
+#include "AudioSamplePerc1.h"
+#include "AudioSamplePerc2.h"
+#include "AudioSamplePerc3.h"
+#include "AudioSamplePerc4.h"
+#include "AudioSamplePerc5.h"
+#include "AudioSampleSnare1.h"
+#include "AudioSampleSnare2.h"
+#include "AudioSampleSnare3.h"
+#include "AudioSampleSnare4.h"
+#include "AudioSampleSnare5.h"
+#include "AudioSampleClap1.h"
+#include "AudioSampleClap2.h"
+#include "AudioSampleClap3.h"
+
+const unsigned int *kickList[1]={AudioSampleKick1};
+const unsigned int *snareList[5]={AudioSampleSnare1,AudioSampleSnare2,AudioSampleSnare3,AudioSampleSnare4,AudioSampleSnare5};
+const unsigned int *clapList[3]={AudioSampleClap1,AudioSampleClap2,AudioSampleClap3};
+const unsigned int *hatList[5]={AudioSampleHat1,AudioSampleHat2,AudioSampleHat3,AudioSampleHat4,AudioSampleHat5};
+const unsigned int *percList[5]={AudioSamplePerc1,AudioSamplePerc2,AudioSamplePerc3,AudioSamplePerc4,AudioSamplePerc5};
+
+#include <Audio.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <SD.h>
+#include <SerialFlash.h>
 
 // GUItool: begin automatically generated code
-AudioSynthWaveformSine   lfoMod1;        //xy=129,188
-AudioSynthWaveformSine   lfoMod2;        //xy=134,326
-AudioSynthWaveformSine   lfoMod3;        //xy=138,487
-AudioSynthWaveformSine   lfoMod4;        //xy=146,648
-AudioSynthWaveformSine   lfoMod5;        //xy=148,805
-AudioSynthWaveformSineModulated sine_fm1;       //xy=264,182
-AudioSynthWaveformSineModulated sine_fm2;       //xy=265,329
-AudioSynthWaveformSineModulated sine_fm4;       //xy=265,646
-AudioSynthWaveformSineModulated sine_fm3;       //xy=271,486
-AudioSynthWaveformSineModulated sine_fm5;       //xy=272,806
-AudioSynthWaveformPWM    waveform1;      //xy=405,181
-AudioSynthWaveformPWM    waveform4;      //xy=405,645
-AudioSynthWaveformPWM    waveform2;      //xy=407,326
-AudioSynthWaveformPWM    waveform3;      //xy=411,482
-AudioSynthWaveformPWM    waveform5;      //xy=411,808
-AudioFilterStateVariable filter2;        //xy=546,332
-AudioFilterStateVariable filter1;        //xy=549,189
-AudioFilterStateVariable filter3;        //xy=551,487
-AudioFilterStateVariable filter4;        //xy=556,650
-AudioFilterStateVariable filter5;        //xy=560,812
-AudioEffectEnvelope      envelope2;      //xy=681,319
-AudioEffectEnvelope      envelope1;      //xy=684,176
-AudioEffectEnvelope      envelope3;      //xy=686,474
-AudioEffectEnvelope      envelope4;      //xy=691,637
-AudioEffectEnvelope      envelope5;      //xy=695,799
-AudioMixer4              mixer1;         //xy=890,410
-AudioSynthWaveform       waveform6;      //xy=924.0000114440918,999
-AudioSynthKarplusStrong  string2;        //xy=927,941
-AudioSynthKarplusStrong  string1;        //xy=930,905
-AudioSynthWaveform       waveform7;      //xy=929.687629699707,1034.3750324249268
-AudioSynthWaveformSine   sine2;          //xy=1028,361
-AudioMixer4              mixer2;         //xy=1039,430
-AudioMixer4              mixer4;         //xy=1074.0000114440918,1031
-AudioSynthWaveform       waveform8;      //xy=1082.2500457763672,1083.2500767707825
-AudioMixer4              mixer6;         //xy=1094,942
-AudioPlayMemory          sound1;         //xy=1120,738
-AudioPlayMemory          sound0;         //xy=1121,688
-AudioPlayMemory          sound2;         //xy=1124,784
-AudioPlayMemory          sound3;         //xy=1127,834
-AudioSynthWaveform       waveform10;     //xy=1193.0000438690186,1177.0001850128174
-AudioSynthWaveform       waveform11;     //xy=1193.0000591278076,1213.000078201294
-AudioSynthWaveform       waveform9;      //xy=1194.0001201629639,1142.000153541565
-AudioSynthWaveform       waveform12;     //xy=1194.0000591278076,1249.000078201294
-AudioFilterStateVariable filter9;        //xy=1202,396
-AudioFilterStateVariable filter10;       //xy=1205,476
-AudioSynthWaveformPWM    pwm1;           //xy=1221.8750381469727,1083.4375314712524
-AudioEffectBitcrusher    bitcrusher1;    //xy=1234,950
-AudioPlayMemory          sound4;         //xy=1296,828
-AudioMixer4              mix1;           //xy=1302,759
-AudioMixer4              mixer3;         //xy=1356.000015258789,1188.0000495910645
-AudioMixer4              mixer12;        //xy=1370.0000190734863,1075
-AudioMixer4              mixer5;         //xy=1379,438
-AudioMixer4              mixer9;         //xy=1382,982
-AudioMixer4              mix2;           //xy=1449,777
-AudioSynthWaveformSine   sine1;          //xy=1453,854
-AudioSynthWaveformSine   sine3;          //xy=1487.5000495910645,1230.0000381469727
-AudioMixer4              mixer13;        //xy=1586.0002098083496,1080.0000476837158
-AudioMixer4              mix3;           //xy=1640.250144958496,766.7500534057617
-AudioEffectEnvelope        envelope6;        //xy=1763.5,1088.75
-AudioOutputI2S           i2s2;           //xy=1788,789
+AudioSynthWaveformSine   lfoMod1;        //xy=137,101
+AudioSynthWaveformSine   lfoMod2;        //xy=142,239
+AudioSynthWaveformSine   lfoMod3;        //xy=146,400
+AudioSynthWaveformSine   lfoMod4;        //xy=154,561
+AudioSynthWaveformSine   lfoMod5;        //xy=156,718
+AudioSynthWaveformSineModulated sine_fm1;       //xy=272,95
+AudioSynthWaveformSineModulated sine_fm2;       //xy=273,242
+AudioSynthWaveformSineModulated sine_fm4;       //xy=273,559
+AudioSynthWaveformSineModulated sine_fm3;       //xy=279,399
+AudioSynthWaveformSineModulated sine_fm5;       //xy=280,719
+AudioSynthWaveformPWM    waveform1;      //xy=413,94
+AudioSynthWaveformPWM    waveform4;      //xy=413,558
+AudioSynthWaveformPWM    waveform2;      //xy=415,239
+AudioSynthWaveformPWM    waveform3;      //xy=419,395
+AudioSynthWaveformPWM    waveform5;      //xy=419,721
+AudioFilterStateVariable filter2;        //xy=554,245
+AudioFilterStateVariable filter1;        //xy=557,102
+AudioFilterStateVariable filter3;        //xy=559,400
+AudioFilterStateVariable filter4;        //xy=564,563
+AudioFilterStateVariable filter5;        //xy=568,725
+AudioEffectEnvelope      envelope2;      //xy=689,232
+AudioEffectEnvelope      envelope1;      //xy=692,89
+AudioEffectEnvelope      envelope3;      //xy=694,387
+AudioEffectEnvelope      envelope4;      //xy=699,550
+AudioEffectEnvelope      envelope5;      //xy=703,712
+AudioMixer4              mixer1;         //xy=898,323
+AudioSynthWaveform       waveform6;      //xy=932,912
+AudioSynthKarplusStrong  string2;        //xy=935,854
+AudioSynthWaveform       waveform7;      //xy=937,947
+AudioSynthKarplusStrong  string1;        //xy=938,818
+AudioMixer4              mixer2;         //xy=1047,343
+AudioMixer4              mixer4;         //xy=1082,944
+AudioSynthWaveform       waveform8;      //xy=1090,996
+AudioMixer4              mixer6;         //xy=1102,855
+AudioPlayMemory          sound1;         //xy=1128,651
+AudioPlayMemory          sound0;         //xy=1129,601
+AudioPlayMemory          sound2;         //xy=1132,697
+AudioPlayMemory          sound3;         //xy=1135,747
+AudioSynthWaveform       waveform10;     //xy=1201,1090
+AudioSynthWaveform       waveform11;     //xy=1201,1126
+AudioSynthWaveform       waveform9;      //xy=1202,1055
+AudioSynthWaveform       waveform12;     //xy=1202,1162
+AudioSynthWaveformPWM    pwm1;           //xy=1229,996
+AudioEffectBitcrusher    bitcrusher1;    //xy=1242,863
+AudioPlayMemory          sound4;         //xy=1304,741
+AudioMixer4              mix1;           //xy=1310,672
+AudioMixer4              mixer3;         //xy=1364,1101
+AudioMixer4              mixer12;        //xy=1378,988
+AudioMixer4              mixer9;         //xy=1390,895
+AudioMixer4              mix2;           //xy=1457,690
+AudioSynthWaveformSine   sine1;          //xy=1461,767
+AudioSynthWaveformSine   sine3;          //xy=1495,1143
+AudioMixer4              mixer13;        //xy=1594,993
+AudioMixer4              mix3;           //xy=1648,679
+AudioEffectEnvelope      envelope6;      //xy=1771,1001
+AudioOutputI2S           i2s2;           //xy=1796,702
 AudioConnection          patchCord1(lfoMod1, sine_fm1);
 AudioConnection          patchCord2(lfoMod2, sine_fm2);
 AudioConnection          patchCord3(lfoMod3, sine_fm3);
@@ -106,41 +123,37 @@ AudioConnection          patchCord25(envelope5, 0, mixer2, 1);
 AudioConnection          patchCord26(mixer1, 0, mixer2, 0);
 AudioConnection          patchCord27(waveform6, 0, mixer4, 0);
 AudioConnection          patchCord28(string2, 0, mixer6, 1);
-AudioConnection          patchCord29(string1, 0, mixer6, 0);
-AudioConnection          patchCord30(waveform7, 0, mixer4, 1);
-AudioConnection          patchCord31(sine2, 0, filter9, 1);
-AudioConnection          patchCord32(sine2, 0, filter10, 1);
-AudioConnection          patchCord33(mixer2, 0, filter9, 0);
-AudioConnection          patchCord34(mixer2, 0, filter10, 0);
-AudioConnection          patchCord35(mixer4, 0, mixer12, 0);
-AudioConnection          patchCord36(waveform8, pwm1);
-AudioConnection          patchCord37(mixer6, bitcrusher1);
-AudioConnection          patchCord38(sound1, 0, mix1, 1);
-AudioConnection          patchCord39(sound0, 0, mix1, 0);
-AudioConnection          patchCord40(sound2, 0, mix1, 2);
-AudioConnection          patchCord41(sound3, 0, mix1, 3);
-AudioConnection          patchCord42(waveform10, 0, mixer3, 1);
-AudioConnection          patchCord43(waveform11, 0, mixer3, 2);
-AudioConnection          patchCord44(waveform9, 0, mixer3, 0);
-AudioConnection          patchCord45(waveform12, 0, mixer3, 3);
-AudioConnection          patchCord46(filter9, 0, mixer5, 0);
-AudioConnection          patchCord47(filter10, 0, mixer5, 1);
-AudioConnection          patchCord48(pwm1, 0, mixer12, 1);
-AudioConnection          patchCord49(bitcrusher1, 0, mixer9, 0);
-AudioConnection          patchCord50(sound4, 0, mix2, 1);
-AudioConnection          patchCord51(mix1, 0, mix2, 0);
-AudioConnection          patchCord52(mixer3, 0, mixer13, 2);
-AudioConnection          patchCord53(mixer12, 0, mixer13, 1);
-AudioConnection          patchCord54(mixer5, 0, mix3, 0);
-AudioConnection          patchCord55(mixer9, 0, mixer13, 0);
-AudioConnection          patchCord56(mix2, 0, mix3, 1);
-AudioConnection          patchCord57(sine1, 0, mix3, 3);
-AudioConnection          patchCord58(sine3, 0, mixer13, 3);
-AudioConnection          patchCord59(mixer13, envelope6);
-AudioConnection          patchCord60(mix3, 0, i2s2, 0);
-AudioConnection          patchCord61(envelope6, 0, mix3, 2);
-AudioControlSGTL5000     audioShield;    //xy=1836,679
+AudioConnection          patchCord29(waveform7, 0, mixer4, 1);
+AudioConnection          patchCord30(string1, 0, mixer6, 0);
+AudioConnection          patchCord31(mixer2, 0, mix3, 0);
+AudioConnection          patchCord32(mixer4, 0, mixer12, 0);
+AudioConnection          patchCord33(waveform8, pwm1);
+AudioConnection          patchCord34(mixer6, bitcrusher1);
+AudioConnection          patchCord35(sound1, 0, mix1, 1);
+AudioConnection          patchCord36(sound0, 0, mix1, 0);
+AudioConnection          patchCord37(sound2, 0, mix1, 2);
+AudioConnection          patchCord38(sound3, 0, mix1, 3);
+AudioConnection          patchCord39(waveform10, 0, mixer3, 1);
+AudioConnection          patchCord40(waveform11, 0, mixer3, 2);
+AudioConnection          patchCord41(waveform9, 0, mixer3, 0);
+AudioConnection          patchCord42(waveform12, 0, mixer3, 3);
+AudioConnection          patchCord43(pwm1, 0, mixer12, 1);
+AudioConnection          patchCord44(bitcrusher1, 0, mixer9, 0);
+AudioConnection          patchCord45(sound4, 0, mix2, 1);
+AudioConnection          patchCord46(mix1, 0, mix2, 0);
+AudioConnection          patchCord47(mixer3, 0, mixer13, 2);
+AudioConnection          patchCord48(mixer12, 0, mixer13, 1);
+AudioConnection          patchCord49(mixer9, 0, mixer13, 0);
+AudioConnection          patchCord50(mix2, 0, mix3, 1);
+AudioConnection          patchCord51(sine1, 0, mix3, 3);
+AudioConnection          patchCord52(sine3, 0, mixer13, 3);
+AudioConnection          patchCord53(mixer13, envelope6);
+AudioConnection          patchCord54(mix3, 0, i2s2, 0);
+AudioConnection          patchCord55(mix3, 0, i2s2, 1);
+AudioConnection          patchCord56(envelope6, 0, mix3, 2);
+AudioControlSGTL5000     audioShield;    //xy=1844,592
 // GUItool: end automatically generated code
+
 
 
 // Darcys Touchscreen Pins and Buttons
@@ -176,7 +189,7 @@ elapsedMillis sinceShift;
 elapsedMillis sinceVolume;
 elapsedMillis sinceRightTrigger;
 int clockDuration;
-float timingValues[5] = {4,8,16,32,64};
+int timingValues[5] = {8,16,32,64,128};
 int drumDivider = 8;
 
 //Ben variables
@@ -306,7 +319,7 @@ void setup() {
 	pca9685_config(0x40);
 	pca9685_config(0x41);
 	pca9685_config(0x42);
-		pca9685_config(0x43);
+	pca9685_config(0x43);
 	mcp23017_config(0x20, 0xFFFF);
 	mcp23017_config(0x21, 0xFFFF);
 	mcp23017_config(0x22, 0xFFFF);
@@ -314,16 +327,16 @@ void setup() {
 	
 	// Drums mixer
 	mix1.gain(0, 1.0); // Drum ch. 1
-	mix1.gain(1, 1.0); // Drum ch. 2
-	mix1.gain(2, 1.0); // Drum ch. 3
+	mix1.gain(1, 0.7); // Drum ch. 2
+	mix1.gain(2, 0.3); // Drum ch. 3
 	mix1.gain(3, 1.0); // Drum ch. 4
 	mix2.gain(0, 0.5); // Drum mixer 1 daisy chain ==> drum mixer 2
-	mix2.gain(1, 0.5); // Drum ch. 5
+	mix2.gain(1, 0.3); // Drum ch. 5
 	
 	// Master Mixer
 	mix3.gain(0, 0.3); // Ross
 	mix3.gain(1, 0.7); // Ben
-	mix3.gain(2, 0.1); // Darcy
+	mix3.gain(2, 0.25); // Darcy
 	mix3.gain(3, 0); // Test Oscillator  //connected to DRC test scales
 	
 	// ROSS SETUP
@@ -463,12 +476,7 @@ void setup() {
 	envelope6.attack(1.5);
 	envelope6.hold(0.5);
 	
-	// Master notch filter
 	
-	sine2.amplitude(1.0);
-	sine2.frequency(0.1);
-	mixer5.gain(0, 0.5);
-	mixer5.gain(1, 0.5);
 }
 
 
@@ -526,9 +534,9 @@ void rightTrigger() {
 		//  int touchYClamped = constrain(touchY, 0, 100);
 		//Serial.print("touchYClamped = "); Serial.print(touchYClamped);
 		
-		int BitsMappedY = map(touchY, 0, 100, 8, 16);
+		int BitsMappedY = map(touchY, 0, 100, 12, 16);
 		//int sRateMappedY = map(p.y, 1023, 600,  33100, 1);  //what kind of formula could I use to make the bitcrushingsound good across all frequencies?
-		int sRateMappedY = map(touchY, 0, 100,  22000, 2000);  //what kind of formula could I use to make the bitcrushingsound good across all frequencies?
+		int sRateMappedY = map(touchY, 0, 100,  22000, 6000);  //what kind of formula could I use to make the bitcrushingsound good across all frequencies?
 		
 		//Serial.print("sRateMappedY = "); Serial.print(sRateMappedY);
 		bitcrusher1.bits(BitsMappedY);//(BitsMappedY);    //bitcrusher1.bits(16);
@@ -706,8 +714,8 @@ void rightTrigger() {
 			//waveform10.amplitude(1);
 			//    waveform11.amplitude(1);
 			//      waveform12.amplitude(1);
-			waveform9.frequency(mtof(scale[noteSelectY - 12] + baseOctave + transpose));
-			waveform10.frequency(mtof(scale[noteSelect - 24] + baseOctave + transpose));
+			waveform9.frequency(mtof(scale[noteSelectY]  - 24 + baseOctave + transpose));
+			waveform10.frequency(mtof(scale[noteSelect] - 24 + baseOctave + transpose));
 			//waveform11.frequency(mtof(scale[noteSelectY] + baseOctave + transpose) - 12.5);
 			//waveform12.frequency(mtof(scale[noteSelect] + baseOctave + transpose) - 24.5);
 			
@@ -828,11 +836,32 @@ void loop() {
 	do_right_panel();
 	if(sinceVolume>25)
 	{
-float volSetting;
-volSetting=float(analogRead(A15))/1023.*0.4+0.4;
-audioShield.volume(volSetting);
+		float volSetting;
+		volSetting=float(analogRead(A15))/1023.*0.4+0.4;
+		audioShield.volume(volSetting);
 		sinceVolume=0;
-		}
+	}
+	//ROSS Filter
+	filterOffset = map(analogRead(32), 0, 1023, 200.0, 10000.0);
+	
+	//filterSum1 = max((smoothedFilterCutoff1 + filterOffset), 200); // truncate lowest possible value to 200
+	//filterSum2 = max((smoothedFilterCutoff2 + filterOffset), 200); // truncate lowest possible value to 200
+	//filterSum3 = max((smoothedFilterCutoff3 + filterOffset), 200); // truncate lowest possible value to 200
+	//filterSum4 = max((smoothedFilterCutoff4 + filterOffset), 200); // truncate lowest possible value to 200
+	//filterSum5 = max((smoothedFilterCutoff5 + filterOffset), 200); // truncate lowest possible value to 200
+	
+	filter1.frequency(filterOffset);
+	filter2.frequency(filterOffset);
+	filter3.frequency(filterOffset);
+	filter4.frequency(filterOffset);
+	filter5.frequency(filterOffset);
+	float decayTime = mapfloat(analogRead(33), 0, 1023, 40.0, 1000.0); // Max decay Range
+	
+	envelope1.decay(decayTime);
+	envelope2.decay(decayTime);
+	envelope3.decay(decayTime);
+	envelope4.decay(decayTime);
+	envelope5.decay(decayTime);
 }
 
 void led_test(void)
@@ -887,7 +916,7 @@ void do_left_panel(void) // Ross's panel
 {
 	// CHORD SELECTION
 	if (transposeClock >= 60000) { // one minute
-		chordSelect = random(9);
+		chordSelect = random(4)+1;
 		transpose = random(-12, 12);
 		transposeClock = 0;
 	}
@@ -912,26 +941,8 @@ void do_left_panel(void) // Ross's panel
 		chord[4] = 16;
 		break;
 		
-		// MAJ 1st inversion
-		case 2:
-		chord[0] = 4;
-		chord[1] = 7;
-		chord[2] = 12;
-		chord[3] = 16;
-		chord[4] = 19;
-		break;
-		
-		// MAJ 2nd inversion
-		case 3:
-		chord[0] = 7;
-		chord[1] = 12;
-		chord[2] = 16;
-		chord[3] = 19;
-		chord[4] = 24;
-		break;
-		
 		// MIN
-		case 4:
+		case 2:
 		chord[0] = 0;
 		chord[1] = 3;
 		chord[2] = 7;
@@ -939,28 +950,8 @@ void do_left_panel(void) // Ross's panel
 		chord[4] = 15;
 		break;
 		
-		
-		// MIN 1st inversion
-		case 5:
-		chord[0] = 3;
-		chord[1] = 7;
-		chord[2] = 12;
-		chord[3] = 15;
-		chord[4] = 19;
-		break;
-		
-		
-		// MIN second inversion
-		case 6:
-		chord[0] = 7;
-		chord[1] = 12;
-		chord[2] = 15;
-		chord[3] = 19;
-		chord[4] = 24;
-		break;
-		
 		// major7
-		case 7:
+		case 3:
 		chord[0] = 0;
 		chord[1] = 4;
 		chord[2] = 7;
@@ -969,18 +960,9 @@ void do_left_panel(void) // Ross's panel
 		break;
 		
 		// minor7
-		case 8:
+		case 4:
 		chord[0] = 0;
 		chord[1] = 3;
-		chord[2] = 7;
-		chord[3] = 10;
-		chord[4] = 12;
-		break;
-		
-		// C7
-		case 9:
-		chord[0] = 0;
-		chord[1] = 4;
 		chord[2] = 7;
 		chord[3] = 10;
 		chord[4] = 12;
@@ -993,280 +975,245 @@ void do_left_panel(void) // Ross's panel
 	
 	baseOctave = 60;
 	octaveMod = buttonCount * 12;
-
-waveform1.frequency(mtof(chord[0] + baseOctave + transpose + octaveMod));
-waveform2.frequency(mtof(chord[1] + baseOctave + transpose + octaveMod) + 0.5);
-waveform3.frequency(mtof(chord[2] + baseOctave + transpose + octaveMod) - 0.5);
-waveform4.frequency(mtof(chord[3] + baseOctave + transpose + octaveMod) + 0.75);
-waveform5.frequency(mtof(chord[4] + baseOctave + transpose + octaveMod) - 0.75);
-
-// Touch sensor reads
-static float touchSensor1, touchSensor2, touchSensor3, touchSensor4, touchSensor5;
-static int touchSenseState = 0;
-switch (touchSenseState) {
-	case 0:
-		touchSensor1 = (touchRead(0));
-		break;
-	case 1:
-		touchSensor2 = (touchRead(1));
-		break;
-	case 2:
-		touchSensor3 = (touchRead(30));
-		break;
-	case 3:
-		touchSensor4 = (touchRead(29));
-		break;
-	case 4:
-	default:
-		touchSensor5 = (touchRead(16));
-}
-touchSenseState++;
-if (touchSenseState < 5) return; // don't stall Ben & Darcy
-touchSenseState = 0;
-
-// ch. 1 Sensor smoothing
-float sensorDifference1 = (touchSensor1 - sensorMinimum1); // Find the minimum average
-if (sensorDifference1 > 0) {
-sensorSmoothness1 = 3000; // "Attack time"
-}
-else {
-sensorSmoothness1 = 5; // "Release time"
-}
-sensorMinimum1 = sensorMinimum1 + (sensorDifference1 / sensorSmoothness1);
-
-// ch. 2 Sensor smoothing
-float sensorDifference2 = (touchSensor2 - sensorMinimum2); // Find the minimum average
-if (sensorDifference2 > 0) {
-sensorSmoothness2 = 3000; // "Attack time"
-}
-else {
-sensorSmoothness2 = 5; // "Release time"
-}
-sensorMinimum2 = sensorMinimum2 + (sensorDifference2 / sensorSmoothness2);
-
-// ch. 3 Sensor smoothing
-float sensorDifference3 = (touchSensor3 - sensorMinimum3); // Find the minimum average
-if (sensorDifference3 > 0) {
-sensorSmoothness3 = 3000; // "Attack time"
-}
-else {
-sensorSmoothness3 = 5; // "Release time"
-}
-sensorMinimum3 = sensorMinimum3 + (sensorDifference3 / sensorSmoothness3);
-
-// ch. 4 Sensor smoothing
-float sensorDifference4 = (touchSensor4 - sensorMinimum4); // Find the minimum average
-if (sensorDifference4 > 0) {
-sensorSmoothness4 = 3000; // "Attack time"
-}
-else {
-sensorSmoothness4 = 5; // "Release time"
-}
-sensorMinimum4 = sensorMinimum4 + (sensorDifference4 / sensorSmoothness4);
-
-// ch. 5 Sensor smoothing
-float sensorDifference5 = (touchSensor5 - sensorMinimum5); // Find the minimum average
-if (sensorDifference5 > 0) {
-sensorSmoothness5 = 3000; // "Attack time"
-}
-else {
-sensorSmoothness5 = 5; // "Release time"
-}
-sensorMinimum5 = sensorMinimum5 + (sensorDifference5 / sensorSmoothness5);
-
-
-// subtract minimum
-float cleanSensorOutput1 = touchSensor1 - sensorMinimum1;
-float cleanSensorOutput2 = touchSensor2 - sensorMinimum2;
-float cleanSensorOutput3 = touchSensor3 - sensorMinimum3;
-float cleanSensorOutput4 = touchSensor4 - sensorMinimum4;
-float cleanSensorOutput5 = touchSensor5 - sensorMinimum5;
-
-// truncate highest/lowest
-cleanSensorOutput1 = max(cleanSensorOutput1, 0); // truncate lowest possible value to 0
-cleanSensorOutput1 = min(cleanSensorOutput1, 1200); // truncate highest possible value to 1200
-
-cleanSensorOutput2 = max(cleanSensorOutput2, 0); // truncate lowest possible value to 0
-cleanSensorOutput2 = min(cleanSensorOutput2, 1200); // truncate highest possible value to 1200
-
-cleanSensorOutput3 = max(cleanSensorOutput3, 0); // truncate lowest possible value to 0
-cleanSensorOutput3 = min(cleanSensorOutput3, 1200); // truncate highest possible value to 1200
-
-cleanSensorOutput4 = max(cleanSensorOutput4, 0); // truncate lowest possible value to 0
-cleanSensorOutput4 = min(cleanSensorOutput4, 1200); // truncate highest possible value to 1200
-
-cleanSensorOutput5 = max(cleanSensorOutput5, 0); // truncate lowest possible value to 0
-cleanSensorOutput5 = min(cleanSensorOutput5, 1200); // truncate highest possible value to 1200
-
-// Comparators
-
-int thresh = 1000; // global threshold
-
-gate1[1] = gate1[0];
-gate1[0] = cleanSensorOutput1 >= thresh; // Comparator threshold for touch sensor
-
-gate2[1] = gate2[0];
-gate2[0] = cleanSensorOutput2 >= thresh; // Comparator threshold for touch sensor
-
-gate3[1] = gate3[0];
-gate3[0] = cleanSensorOutput3 >= thresh; // Comparator threshold for touch sensor
-
-gate4[1] = gate4[0];
-gate4[0] = cleanSensorOutput4 >= thresh; // Comparator threshold for touch sensor
-
-gate5[1] = gate5[0];
-gate5[0] = cleanSensorOutput5 >= thresh; // Comparator threshold for touch sensor
-
-// Divide
-divide = timingValues[map(analogRead(31), 0, 1023, 4,0)]; // Division amounts
-
-if (stepCount % divide == 0) {
-gate1[1] = 0;
-gate2[1] = 0;
-gate3[1] = 0;
-gate4[1] = 0;
-gate5[1] = 0;
-}
-else {
-gate1[1] = 1;
-gate2[1] = 1;
-gate3[1] = 1;
-gate4[1] = 1;
-gate5[1] = 1;
-}
-
-// ch.1  Note on/off messages
-if (gate1[0] > gate1[1]) {
-envelope1.noteOn();
-}
-
-if (gate1[1] > gate1[0]) {
-envelope1.noteOff();
-}
-
-// ch. 2 Note on/off messages
-
-if (gate2[0] > gate2[1]) {
-envelope2.noteOn();
-}
-
-if (gate2[1] > gate2[0]) {
-envelope2.noteOff();
-}
-
-// ch. 3 Note on/off messages
-
-if (gate3[0] > gate3[1]) {
-envelope3.noteOn();
-}
-
-if (gate3[1] > gate3[0]) {
-envelope3.noteOff();
-}
-
-// ch. 4 Note on/off messages
-
-if (gate4[0] > gate4[1]) {
-envelope4.noteOn();
-}
-
-if (gate4[1] > gate4[0]) {
-envelope4.noteOff();
-}
-
-// ch. 5 Note on/off messages
-
-if (gate5[0] > gate5[1]) {
-envelope5.noteOn();
-}
-
-if (gate5[1] > gate5[0]) {
-envelope5.noteOff();
-}
-
-
-// Map sensor data to filter range
-currentFilterCutoff1 = mapfloat(cleanSensorOutput1, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
-currentFilterCutoff2 = mapfloat(cleanSensorOutput2, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
-currentFilterCutoff3 = mapfloat(cleanSensorOutput3, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
-currentFilterCutoff4 = mapfloat(cleanSensorOutput4, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
-currentFilterCutoff5 = mapfloat(cleanSensorOutput5, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
-
-// ch. 1 filter slew
-float cutoffDifference1 = (currentFilterCutoff1 - smoothedFilterCutoff1);
-if (cutoffDifference1 > 0) {
-filterCutoffSlew1 = 100; // "Attack Time"
-}
-else {
-filterCutoffSlew1 = 5; // "Release Time"
-}
-smoothedFilterCutoff1 = smoothedFilterCutoff1 + cutoffDifference1 / filterCutoffSlew1; // Find average
-
-// ch. 2 filter slew
-float cutoffDifference2 = (currentFilterCutoff2 - smoothedFilterCutoff2);
-if (cutoffDifference2 > 0) {
-filterCutoffSlew2 = 100; // "Attack Time"
-}
-else {
-filterCutoffSlew2 = 5; // "Release Time"
-}
-smoothedFilterCutoff2 = smoothedFilterCutoff2 + cutoffDifference2 / filterCutoffSlew2; // Find average
-
-// ch. 3 filter slew
-float cutoffDifference3 = (currentFilterCutoff3 - smoothedFilterCutoff3);
-if (cutoffDifference3 > 0) {
-filterCutoffSlew3 = 100; // "Attack Time"
-}
-else {
-filterCutoffSlew3 = 5; // "Release Time"
-}
-smoothedFilterCutoff3 = smoothedFilterCutoff3 + cutoffDifference3 / filterCutoffSlew3; // Find average
-
-// ch. 4 filter slew
-float cutoffDifference4 = (currentFilterCutoff4 - smoothedFilterCutoff4);
-if (cutoffDifference4 > 0) {
-filterCutoffSlew4 = 100; // "Attack Time"
-}
-else {
-filterCutoffSlew4 = 5; // "Release Time"
-}
-smoothedFilterCutoff4 = smoothedFilterCutoff4 + cutoffDifference4 / filterCutoffSlew4; // Find average
-
-// ch. 5 filter slew
-float cutoffDifference5 = (currentFilterCutoff5 - smoothedFilterCutoff5);
-if (cutoffDifference5 > 0) {
-filterCutoffSlew5 = 100; // "Attack Time"
-}
-else {
-filterCutoffSlew5 = 5; // "Release Time"
-}
-smoothedFilterCutoff5 = smoothedFilterCutoff5 + cutoffDifference5 / filterCutoffSlew5; // Find average
-
-filterOffset = map(analogRead(32), 0, 1023, -10000.0, 2000.0);
-
-filterSum1 = max((smoothedFilterCutoff1 + filterOffset), 200); // truncate lowest possible value to 200
-filterSum2 = max((smoothedFilterCutoff2 + filterOffset), 200); // truncate lowest possible value to 200
-filterSum3 = max((smoothedFilterCutoff3 + filterOffset), 200); // truncate lowest possible value to 200
-filterSum4 = max((smoothedFilterCutoff4 + filterOffset), 200); // truncate lowest possible value to 200
-filterSum5 = max((smoothedFilterCutoff5 + filterOffset), 200); // truncate lowest possible value to 200
-
-filter1.frequency(filterSum1);
-filter2.frequency(filterSum2);
-filter3.frequency(filterSum3);
-filter4.frequency(filterSum4);
-filter5.frequency(filterSum5);
-
-float decayTime = mapfloat(analogRead(33), 0, 1023, 40.0, 200.0); // Max decay Range
-
-envelope1.decay(decayTime);
-envelope2.decay(decayTime);
-envelope3.decay(decayTime);
-envelope4.decay(decayTime);
-envelope5.decay(decayTime);
+	
+	waveform1.frequency(mtof(chord[0] + baseOctave + transpose + octaveMod));
+	waveform2.frequency(mtof(chord[1] + baseOctave + transpose + octaveMod) + 0.5);
+	waveform3.frequency(mtof(chord[2] + baseOctave + transpose + octaveMod) - 0.5);
+	waveform4.frequency(mtof(chord[3] + baseOctave + transpose + octaveMod) + 0.75);
+	waveform5.frequency(mtof(chord[4] + baseOctave + transpose + octaveMod) - 0.75);
+	
+	// Touch sensor reads
+	static float touchSensor1, touchSensor2, touchSensor3, touchSensor4, touchSensor5;
+	touchSensor1 = (touchRead(16));
+	touchSensor2 = (touchRead(29));
+	touchSensor3 = (touchRead(30));
+	touchSensor4 = (touchRead(1));
+	touchSensor5 = (touchRead(0));
+	//16,29,30,1,0
+	// ch. 1 Sensor smoothing
+	float sensorDifference1 = (touchSensor1 - sensorMinimum1); // Find the minimum average
+	if (sensorDifference1 > 0) {
+		sensorSmoothness1 = 3000; // "Attack time"
+	}
+	else {
+		sensorSmoothness1 = 5; // "Release time"
+	}
+	sensorMinimum1 = sensorMinimum1 + (sensorDifference1 / sensorSmoothness1);
+	
+	// ch. 2 Sensor smoothing
+	float sensorDifference2 = (touchSensor2 - sensorMinimum2); // Find the minimum average
+	if (sensorDifference2 > 0) {
+		sensorSmoothness2 = 3000; // "Attack time"
+	}
+	else {
+		sensorSmoothness2 = 5; // "Release time"
+	}
+	sensorMinimum2 = sensorMinimum2 + (sensorDifference2 / sensorSmoothness2);
+	
+	// ch. 3 Sensor smoothing
+	float sensorDifference3 = (touchSensor3 - sensorMinimum3); // Find the minimum average
+	if (sensorDifference3 > 0) {
+		sensorSmoothness3 = 3000; // "Attack time"
+	}
+	else {
+		sensorSmoothness3 = 5; // "Release time"
+	}
+	sensorMinimum3 = sensorMinimum3 + (sensorDifference3 / sensorSmoothness3);
+	
+	// ch. 4 Sensor smoothing
+	float sensorDifference4 = (touchSensor4 - sensorMinimum4); // Find the minimum average
+	if (sensorDifference4 > 0) {
+		sensorSmoothness4 = 3000; // "Attack time"
+	}
+	else {
+		sensorSmoothness4 = 5; // "Release time"
+	}
+	sensorMinimum4 = sensorMinimum4 + (sensorDifference4 / sensorSmoothness4);
+	
+	// ch. 5 Sensor smoothing
+	float sensorDifference5 = (touchSensor5 - sensorMinimum5); // Find the minimum average
+	if (sensorDifference5 > 0) {
+		sensorSmoothness5 = 3000; // "Attack time"
+	}
+	else {
+		sensorSmoothness5 = 5; // "Release time"
+	}
+	sensorMinimum5 = sensorMinimum5 + (sensorDifference5 / sensorSmoothness5);
+	
+	
+	// subtract minimum
+	float cleanSensorOutput1 = touchSensor1 - sensorMinimum1;
+	float cleanSensorOutput2 = touchSensor2 - sensorMinimum2;
+	float cleanSensorOutput3 = touchSensor3 - sensorMinimum3;
+	float cleanSensorOutput4 = touchSensor4 - sensorMinimum4;
+	float cleanSensorOutput5 = touchSensor5 - sensorMinimum5;
+	
+	// truncate highest/lowest
+	cleanSensorOutput1 = max(cleanSensorOutput1, 0); // truncate lowest possible value to 0
+	cleanSensorOutput1 = min(cleanSensorOutput1, 1200); // truncate highest possible value to 1200
+	
+	cleanSensorOutput2 = max(cleanSensorOutput2, 0); // truncate lowest possible value to 0
+	cleanSensorOutput2 = min(cleanSensorOutput2, 1200); // truncate highest possible value to 1200
+	
+	cleanSensorOutput3 = max(cleanSensorOutput3, 0); // truncate lowest possible value to 0
+	cleanSensorOutput3 = min(cleanSensorOutput3, 1200); // truncate highest possible value to 1200
+	
+	cleanSensorOutput4 = max(cleanSensorOutput4, 0); // truncate lowest possible value to 0
+	cleanSensorOutput4 = min(cleanSensorOutput4, 1200); // truncate highest possible value to 1200
+	
+	cleanSensorOutput5 = max(cleanSensorOutput5, 0); // truncate lowest possible value to 0
+	cleanSensorOutput5 = min(cleanSensorOutput5, 1200); // truncate highest possible value to 1200
+	
+	// Comparators
+	
+	int thresh = 2300; // global threshold
+	/*
+		gate1[1] = gate1[0];
+		gate1[0] = cleanSensorOutput1 >= thresh; // Comparator threshold for touch sensor
+		
+		gate2[1] = gate2[0];
+		gate2[0] = cleanSensorOutput2 >= thresh; // Comparator threshold for touch sensor
+		
+		gate3[1] = gate3[0];
+		gate3[0] = cleanSensorOutput3 >= thresh; // Comparator threshold for touch sensor
+		
+		gate4[1] = gate4[0];
+		gate4[0] = cleanSensorOutput4 >= thresh; // Comparator threshold for touch sensor
+		
+		gate5[1] = gate5[0];
+		gate5[0] = cleanSensorOutput5 >= thresh; // Comparator threshold for touch sensor
+		
+		// Divide
+		
+		if (stepCount % divide == 0) {
+		gate1[1] = 0;
+		gate2[1] = 0;
+		gate3[1] = 0;
+		gate4[1] = 0;
+		gate5[1] = 0;
+		}
+		else {
+		gate1[1] = 1;
+		gate2[1] = 1;
+		gate3[1] = 1;
+		gate4[1] = 1;
+		gate5[1] = 1;
+		}
+	*/
+	// ch.1  Note on/off messages
+	if (touchSensor1>thresh) {
+		envelope1.noteOn();
+	}
+	
+	if (touchSensor1<thresh) {
+		envelope1.noteOff();
+	}
+	
+	// ch. 2 Note on/off messages
+	
+	if (touchSensor2>thresh) {
+		envelope2.noteOn();
+	}
+	
+	if (touchSensor2<thresh) {
+		envelope2.noteOff();
+	}
+	
+	// ch. 3 Note on/off messages
+	
+	if (touchSensor3>thresh) {
+		envelope3.noteOn();
+	}
+	
+	if (touchSensor3<thresh) {
+		envelope3.noteOff();
+	}
+	
+	// ch. 4 Note on/off messages
+	
+	if (touchSensor4>thresh) {
+		envelope4.noteOn();
+	}
+	
+	if (touchSensor4<thresh) {
+		envelope4.noteOff();
+	}
+	
+	// ch. 5 Note on/off messages
+	if (touchSensor5>thresh) {
+		envelope5.noteOn();
+	}
+	
+	if (touchSensor5<thresh) {
+		envelope5.noteOff();
+	}
+	/*
+		
+		// Map sensor data to filter range
+		currentFilterCutoff1 = mapfloat(cleanSensorOutput1, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
+		currentFilterCutoff2 = mapfloat(cleanSensorOutput2, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
+		currentFilterCutoff3 = mapfloat(cleanSensorOutput3, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
+		currentFilterCutoff4 = mapfloat(cleanSensorOutput4, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
+		currentFilterCutoff5 = mapfloat(cleanSensorOutput5, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
+		
+		// ch. 1 filter slew
+		float cutoffDifference1 = (currentFilterCutoff1 - smoothedFilterCutoff1);
+		if (cutoffDifference1 > 0) {
+		filterCutoffSlew1 = 20; // "Attack Time"
+		}
+		else {
+		filterCutoffSlew1 = 5; // "Release Time"
+		}
+		smoothedFilterCutoff1 = smoothedFilterCutoff1 + cutoffDifference1 / filterCutoffSlew1; // Find average
+		
+		// ch. 2 filter slew
+		float cutoffDifference2 = (currentFilterCutoff2 - smoothedFilterCutoff2);
+		if (cutoffDifference2 > 0) {
+		filterCutoffSlew2 = 20; // "Attack Time"
+		}
+		else {
+		filterCutoffSlew2 = 5; // "Release Time"
+		}
+		smoothedFilterCutoff2 = smoothedFilterCutoff2 + cutoffDifference2 / filterCutoffSlew2; // Find average
+		
+		// ch. 3 filter slew
+		float cutoffDifference3 = (currentFilterCutoff3 - smoothedFilterCutoff3);
+		if (cutoffDifference3 > 0) {
+		filterCutoffSlew3 = 20; // "Attack Time"
+		}
+		else {
+		filterCutoffSlew3 = 5; // "Release Time"
+		}
+		smoothedFilterCutoff3 = smoothedFilterCutoff3 + cutoffDifference3 / filterCutoffSlew3; // Find average
+		
+		// ch. 4 filter slew
+		float cutoffDifference4 = (currentFilterCutoff4 - smoothedFilterCutoff4);
+		if (cutoffDifference4 > 0) {
+		filterCutoffSlew4 = 20; // "Attack Time"
+		}
+		else {
+		filterCutoffSlew4 = 5; // "Release Time"
+		}
+		smoothedFilterCutoff4 = smoothedFilterCutoff4 + cutoffDifference4 / filterCutoffSlew4; // Find average
+		
+		// ch. 5 filter slew
+		float cutoffDifference5 = (currentFilterCutoff5 - smoothedFilterCutoff5);
+		if (cutoffDifference5 > 0) {
+		filterCutoffSlew5 = 20; // "Attack Time"
+		}
+		else {
+		filterCutoffSlew5 = 5; // "Release Time"
+		}
+		smoothedFilterCutoff5 = smoothedFilterCutoff5 + cutoffDifference5 / filterCutoffSlew5; // Find average
+	*/
+	
+	
+	
 }
 
 void do_center_panel(void)  //Bens Sequencer
 {
+	leftTiming = timingValues[map(analogRead(31), 0, 1023, 4,0)]; // Division amounts
 	for(int i=0;i<40;i++)
 	{
 		if(currentButtons[buttonMapping[i]]<lastButtons[buttonMapping[i]])
@@ -1280,41 +1227,47 @@ void do_center_panel(void)  //Bens Sequencer
 		if(currentButtons[i+52]<lastButtons[i+52])
 		buttonSelection=i;
 	}
-		if(currentButtons[20]<lastButtons[20])
-		buttonCount--;
-		if(currentButtons[21]<lastButtons[21])
-		buttonCount++;
+	if(currentButtons[20]<lastButtons[20])
+	buttonCount--;
+	if(currentButtons[21]<lastButtons[21])
+	buttonCount++;
 	if(buttonCount>2)
-		buttonCount=2;
+	buttonCount=2;
 	if(buttonCount<-2)
-		buttonCount=-2;
+	buttonCount=-2;
 	lastOn=totalOn;
 	totalOn=0;
 	for(int i=0; i<5; i++)
 	rowOn[i]=0;
 	for(int r=0; r<5; r++)
 	{
-	for(int c=0; c<8; c++)
-	{
-		if(bitRead(row[r],c))
+		for(int c=0; c<8; c++)
 		{
-			rowOn[r]++;
-		totalOn++;
-		}
+			if(bitRead(row[r],c))
+			{
+				rowOn[r]++;
+				totalOn++;
+			}
 		}
 	}
 	float diff;
 	diff = analogRead(A16) - tempo; //was A16, changed to A17 for DRC test
 	tempo = tempo + diff / 4;
-	tempo = (tempo / 2) + 20;
+	tempo = int(tempo / 2) + 20;
 	if (sinceTempo >= (15000 / (tempo*8)))
 	{
 		if(stepCount%rightTiming==0)
 		rightTrigger();
-		if(stepCount/drumDivider%256==0)
+		if(stepCount%leftTiming==0)
+		leftTrigger();
+		if(stepCount/drumDivider%32==0)
 		{
 			int randomSample;
-			selectedSample[randomSample]=random(2);
+			randomSample=random(5);
+			if(randomSample==3)
+			selectedSample[3]=random(3);
+			else
+			selectedSample[randomSample]=random(5);
 		}
 		if(sinceTouch>10000&&totalOn<offThreshold&&stepCount%64==0)
 		{
@@ -1334,7 +1287,7 @@ void do_center_panel(void)  //Bens Sequencer
 					int mapRow;
 					mapStep=random(8);
 					mapRow=random(5);
-				//	bitWrite(row[mapRow],mapStep,bitRead(drumTable[mapRow],mapStep));
+					//	bitWrite(row[mapRow],mapStep,bitRead(drumTable[mapRow],mapStep));
 				}
 			}
 		}
@@ -1363,138 +1316,102 @@ void do_center_panel(void)  //Bens Sequencer
 			}
 		}
 		/*
-	#include "AudioSampleDt_kick.h"
-	#include "AudioSampleDt_openhat.h"
-	#include "AudioSampleDt_snare.h"
-	#include "AudioSampleDt_tamborine.h"
-	#include "AudioSampleDt_tom01.h"
-	*/
-	//leftTrigger();
-	//rightTrigger();
-	if(stepCount%drumDivider==0)
-	{
-	if (bitRead(row[0], stepCount/drumDivider % 8))
-	{
-	switch(selectedSample[0])
-	{
-	case 0:
-	sound0.play(AudioSampleDt_kick);
-	break;
-	case 1:
-	sound0.play(AudioSampleVer04wavfcus);
-	break;
-	}
-	}
-	if (bitRead(row[1], stepCount/drumDivider % 8))
-	{
-	switch(selectedSample[1])
-	{
-	case 0:
-	sound1.play(AudioSampleDt_snare);
-	break;
-	case 1:
-	sound1.play(AudioSampleDt_clap);
-	break;
-	}
-	}
-	if (bitRead(row[2], stepCount/drumDivider % 8))
-	{
-	switch(selectedSample[2])
-	{
-	case 0:
-	sound2.play(AudioSampleDt_cowbell);
-	break;
-	case 1:
-	sound2.play(AudioSampleDt_rimshot);
-	break;
-	}
-	}
-	if (bitRead(row[3], stepCount/drumDivider % 8))
-	{
-	switch(selectedSample[3])
-	{
-	case 0:
-	sound3.play(AudioSampleDt_closedhat);
-	break;
-	case 1:
-	sound3.play(AudioSampleShaker);
-	break;
-	}
-	}
-	if (bitRead(row[4], stepCount/drumDivider % 8))
-	{
-	switch(selectedSample[4])
-	{
-	case 0:
-	sound4.play(AudioSampleDt_tamborine);
-	break;
-	case 1:
-	sound4.play(AudioSampleCastinet);
-	break;
-	}
-	}
-	}
-	stepCount++;
-	clockDuration=sinceTempo;
-		do_left_panel();
-	sinceTempo = 0;
+			#include "AudioSampleDt_kick.h"
+			#include "AudioSampleDt_openhat.h"
+			#include "AudioSampleDt_snare.h"
+			#include "AudioSampleDt_tamborine.h"
+			#include "AudioSampleDt_tom01.h"
+		*/
+		//leftTrigger();
+		//rightTrigger();
+		if(stepCount%drumDivider==0)
+		{
+			if (bitRead(row[0], stepCount/drumDivider % 8))
+			{
+				sound4.play(percList[selectedSample[4]]);
+			}
+			if (bitRead(row[1], stepCount/drumDivider % 8))
+			{
+				sound2.play(hatList[selectedSample[2]]);
+			}
+			if (bitRead(row[2], stepCount/drumDivider % 8))
+			{
+				sound1.play(snareList[selectedSample[1]]);
+			}
+			if (bitRead(row[3], stepCount/drumDivider % 8))
+			{
+				sound3.play(clapList[selectedSample[3]%3]);
+			}
+			if (bitRead(row[4], stepCount/drumDivider % 8))
+			{
+				sound0.play(kickList[0]);
+			}
+		}
+		stepCount++;
+		clockDuration=sinceTempo;
+		//Serial.println(tempo);
+		sinceTempo = sinceTempo-clockDuration;
 	}
 	// button step sequencer stuff goes here
 }
 
+void leftTrigger()
+{
+	do_left_panel();
+}
 
 void do_right_panel(void)   // DRC touch panel synth stuff goes here
 {
-//    Serial.print("modeSelect");
-//      Serial.print(modeSelect);
-int rightTimeSelection=map(analogRead(A17),0,1023,4,0);
-rightTiming=timingValues[int(rightTimeSelection)];
-//Serial.print(" p.x = "); Serial.print(p.x);
-//Serial.print("p.y = "); Serial.print(p.y);
-//int envelope6Control = map(analogRead(TsPot2), 0, 1023, 0.00, 2.00);
-//      float envelope6Control = float(analogRead(TsPot2)) / 511.5;
-int envelope6Control = (analogRead(TsPot2)+40);
-envelope6.decay(envelope6Control);
-//      envelope6.decay(envelope6Control);
-//  Serial.print(" envelope6Control = "); Serial.print(envelope6Control);
-
-
-//  Serial.print (" noteSelect = "); Serial.println(noteSelect);
-//waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
-modeSelect = buttonSelection+1;
-//  Serial.print(modeSelect);
-//A20 this is used to select the different synth options in lieu of a button/rotary interaface.
-
-scale[1] = chord[0] - 12;
-scale[2] = chord[1] - 12;
-scale[3] = chord[2] - 12;
-scale[4] = chord[3] - 12;
-scale[5] = chord[4] - 12;
-scale[6] = chord[0];
-scale[7] = chord[1];
-scale[8] = chord[2];
-scale[9] = chord[3];
-scale[10] = chord[4];
-scale[11] = chord[0] + 12;
-scale[12] = chord[1] + 12;
-scale[13] = chord[2] + 12;
-scale[14] = chord[3] + 12;
-scale[15] = chord[4] + 12;
-scale[16] = chord[0] + 24;
-scale[17] = chord[1] + 24;
-scale[18] = chord[2] + 24;
-scale[19] = chord[3] + 24;
-scale[20] = chord[4] + 24;
-scale[21] = chord[0] + 36;
-scale[22] = chord[1] + 36;
-scale[23] = chord[2] + 36;
-scale[24] = chord[3] + 36;
-scale[25] = chord[4] + 36;
-//sine1.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
-//Serial.print("modeSelect"); Serial.println(modeSelect);
-///////////////////////////GUITAR & BITCRUSHING
-
-//
-//Serial.println(" ");
-
+	//    Serial.print("modeSelect");
+	//      Serial.print(modeSelect);
+	int rightTimeSelection=map(analogRead(A17),0,1023,4,0);
+	rightTiming=timingValues[int(rightTimeSelection)]/2;
+	//Serial.print(" p.x = "); Serial.print(p.x);
+	//Serial.print("p.y = "); Serial.print(p.y);
+	//int envelope6Control = map(analogRead(TsPot2), 0, 1023, 0.00, 2.00);
+	//      float envelope6Control = float(analogRead(TsPot2)) / 511.5;
+	int envelope6Control = (analogRead(TsPot2)+40);
+	envelope6.decay(envelope6Control);
+	//      envelope6.decay(envelope6Control);
+	//  Serial.print(" envelope6Control = "); Serial.print(envelope6Control);
+	
+	
+	//  Serial.print (" noteSelect = "); Serial.println(noteSelect);
+	//waveform6.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+	modeSelect = buttonSelection+1;
+	//  Serial.print(modeSelect);
+	//A20 this is used to select the different synth options in lieu of a button/rotary interaface.
+	
+	scale[1] = chord[0] - 12;
+	scale[2] = chord[1] - 12;
+	scale[3] = chord[2] - 12;
+	scale[4] = chord[3] - 12;
+	scale[5] = chord[4] - 12;
+	scale[6] = chord[0];
+	scale[7] = chord[1];
+	scale[8] = chord[2];
+	scale[9] = chord[3];
+	scale[10] = chord[4];
+	scale[11] = chord[0] + 12;
+	scale[12] = chord[1] + 12;
+	scale[13] = chord[2] + 12;
+	scale[14] = chord[3] + 12;
+	scale[15] = chord[4] + 12;
+	scale[16] = chord[0] + 24;
+	scale[17] = chord[1] + 24;
+	scale[18] = chord[2] + 24;
+	scale[19] = chord[3] + 24;
+	scale[20] = chord[4] + 24;
+	scale[21] = chord[0] + 36;
+	scale[22] = chord[1] + 36;
+	scale[23] = chord[2] + 36;
+	scale[24] = chord[3] + 36;
+	scale[25] = chord[4] + 36;
+	//sine1.frequency(mtof(scale[noteSelect] + baseOctave + transpose));
+	//Serial.print("modeSelect"); Serial.println(modeSelect);
+	///////////////////////////GUITAR & BITCRUSHING
+	
+	//
+	//Serial.println(" ");
+	
 }
