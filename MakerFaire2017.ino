@@ -200,7 +200,7 @@ boolean selectedSample[5];
 int rowOn[5];
 int lastOn;
 int totalOn;
-int offThreshold = 8;
+int offThreshold = 10;
 byte drumTable[5] = {0b01001111, 0b10010000, 0b11100110, 0b11010101, 0b11111111};
 boolean GPIOOnline = 1;
 int buttonMapping[40]={0,1,2,3,32,33,34,35, 4, 5, 6, 7, 36, 37, 38, 39, 8, 9, 10, 11, 40, 41, 42, 43, 12, 13, 14, 15, 44, 45, 46, 47, 16, 17, 18, 19, 48, 49, 50, 51};
@@ -506,7 +506,7 @@ void rightTrigger() {
 		mixer13.gain(1, 0);
 		mixer13.gain(2, 0);
 		//ON
-		mixer13.gain(0, 1); //put global
+		mixer13.gain(0, 1.4); //put global
 		envelope6.noteOn();
 		
 		
@@ -1253,14 +1253,14 @@ void do_center_panel(void)  //Bens Sequencer
 	float diff;
 	diff = analogRead(A16) - tempo; //was A16, changed to A17 for DRC test
 	tempo = tempo + diff / 4;
-	tempo = int(tempo / 2) + 20;
+	tempo = int(tempo / 3) + 70;
 	if (sinceTempo >= (15000 / (tempo*8)))
 	{
 		if(stepCount%rightTiming==0)
 		rightTrigger();
 		if(stepCount%leftTiming==0)
 		leftTrigger();
-		if(stepCount/drumDivider%32==0)
+		if(stepCount/drumDivider%256==0)
 		{
 			int randomSample;
 			randomSample=random(5);
@@ -1269,7 +1269,7 @@ void do_center_panel(void)  //Bens Sequencer
 			else
 			selectedSample[randomSample]=random(5);
 		}
-		if(sinceTouch>10000&&totalOn<offThreshold&&stepCount%64==0)
+		if(sinceTouch>30000&&totalOn<offThreshold&&stepCount%64==0)
 		{
 			for (int r=0; r<5; r++)
 			{
