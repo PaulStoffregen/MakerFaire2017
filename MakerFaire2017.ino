@@ -198,11 +198,11 @@ elapsedMillis transposeClock;
 elapsedMillis buttonDebounce1;
 elapsedMillis buttonDebounce2;
 
-int touchSensor1 = 0;
-int touchSensor2 = 0;
-int touchSensor3 = 0;
-int touchSensor4 = 0;
-int touchSensor5 = 0;
+//int touchSensor1 = 0;
+//int touchSensor2 = 0;
+//int touchSensor3 = 0;
+//int touchSensor4 = 0;
+//int touchSensor5 = 0;
 
 boolean gate1[2];
 boolean gate2[2];
@@ -1001,12 +1001,28 @@ waveform4.frequency(mtof(chord[3] + baseOctave + transpose + octaveMod) + 0.75);
 waveform5.frequency(mtof(chord[4] + baseOctave + transpose + octaveMod) - 0.75);
 
 // Touch sensor reads
-float touchSensor1 = (touchRead(0));
-float touchSensor2 = (touchRead(1));
-float touchSensor3 = (touchRead(30));
-float touchSensor4 = (touchRead(29));
-float touchSensor5 = (touchRead(16));
-
+static float touchSensor1, touchSensor2, touchSensor3, touchSensor4, touchSensor5;
+static int touchSenseState = 0;
+switch (touchSenseState) {
+	case 0:
+		touchSensor1 = (touchRead(0));
+		break;
+	case 1:
+		touchSensor2 = (touchRead(1));
+		break;
+	case 2:
+		touchSensor3 = (touchRead(30));
+		break;
+	case 3:
+		touchSensor4 = (touchRead(29));
+		break;
+	case 4:
+	default:
+		touchSensor5 = (touchRead(16));
+}
+touchSenseState++;
+if (touchSenseState < 5) return; // don't stall Ben & Darcy
+touchSenseState = 0;
 
 // ch. 1 Sensor smoothing
 float sensorDifference1 = (touchSensor1 - sensorMinimum1); // Find the minimum average
