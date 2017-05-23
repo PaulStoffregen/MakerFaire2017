@@ -188,8 +188,9 @@ elapsedMillis sinceTouch;
 elapsedMillis sinceShift;
 elapsedMillis sinceVolume;
 elapsedMillis sinceRightTrigger;
+elapsedMillis sinceTouchRead;
 int clockDuration;
-int timingValues[5] = {8,16,32,64,128};
+int timingValues[3] = {4,8,16};
 int drumDivider = 8;
 
 //Ben variables
@@ -266,6 +267,7 @@ float filterSum2 = 0;
 float filterSum3 = 0;
 float filterSum4 = 0;
 float filterSum5 = 0;
+int thresh[5] = {1900,1900,1900,2050,2050}; // global threshold
 
 float filterOffset = 0;
 
@@ -288,6 +290,14 @@ boolean button1[2];
 boolean button2[2];
 int buttonCount = 0;
 int debounceTime = 0;
+float touchSensor[5];
+float touchSensor1=1800;
+float touchSensor2=1800;
+float touchSensor3=1800;
+float touchSensor4=1800;
+float touchSensor5=1800;
+float touchBaseline[5]={1800,1800,1800,1800,1800};
+bool touchPrevious[5]={false,false,false,false,false};
 
 int octaveMod = 0;
 // END OF ROSS'S STUFF
@@ -326,17 +336,17 @@ void setup() {
 	mcp23017_config(0x23, 0xFFFF);
 	
 	// Drums mixer
-	mix1.gain(0, 1.0); // Drum ch. 1
+	mix1.gain(0, 2.0); // Drum ch. 1
 	mix1.gain(1, 0.7); // Drum ch. 2
-	mix1.gain(2, 0.3); // Drum ch. 3
+	mix1.gain(2, 0.6); // Drum ch. 3
 	mix1.gain(3, 1.0); // Drum ch. 4
 	mix2.gain(0, 0.5); // Drum mixer 1 daisy chain ==> drum mixer 2
-	mix2.gain(1, 0.3); // Drum ch. 5
+	mix2.gain(1, 0.8); // Drum ch. 5
 	
 	// Master Mixer
-	mix3.gain(0, 0.3); // Ross
+	mix3.gain(0, 0.6); // Ross
 	mix3.gain(1, 0.7); // Ben
-	mix3.gain(2, 0.25); // Darcy
+	mix3.gain(2, 0.45); // Darcy
 	mix3.gain(3, 0); // Test Oscillator  //connected to DRC test scales
 	
 	// ROSS SETUP
@@ -365,10 +375,10 @@ void setup() {
 		sensorSum5 = sensorSum5 + touchRead(16);
 	}
 	
-	mixer1.gain(0, 0.25);
-	mixer1.gain(1, 0.25);
-	mixer1.gain(2, 0.25);
-	mixer1.gain(3, 0.25);
+	mixer1.gain(0, 0.5);
+	mixer1.gain(1, 0.5);
+	mixer1.gain(2, 0.5);
+	mixer1.gain(3, 0.5);
 	mixer2.gain(0, 0.5);
 	mixer2.gain(1, 0.2);
 	
@@ -455,7 +465,7 @@ void setup() {
 	mixer6.gain(0, 1);
 	mixer6.gain(1, 1);
 	
-	mixer9.gain(0, 1);
+	mixer9.gain(0, 1.6);
 	mixer9.gain(1, 1);
 	
 	mixer12.gain(0, 1);
@@ -534,9 +544,9 @@ void rightTrigger() {
 		//  int touchYClamped = constrain(touchY, 0, 100);
 		//Serial.print("touchYClamped = "); Serial.print(touchYClamped);
 		
-		int BitsMappedY = map(touchY, 0, 100, 12, 16);
+		int BitsMappedY = map(touchY, 0, 100, 16, 12);
 		//int sRateMappedY = map(p.y, 1023, 600,  33100, 1);  //what kind of formula could I use to make the bitcrushingsound good across all frequencies?
-		int sRateMappedY = map(touchY, 0, 100,  22000, 6000);  //what kind of formula could I use to make the bitcrushingsound good across all frequencies?
+		int sRateMappedY = map(touchY, 0, 100,  22000, 4000);  //what kind of formula could I use to make the bitcrushingsound good across all frequencies?
 		
 		//Serial.print("sRateMappedY = "); Serial.print(sRateMappedY);
 		bitcrusher1.bits(BitsMappedY);//(BitsMappedY);    //bitcrusher1.bits(16);
@@ -567,12 +577,12 @@ void rightTrigger() {
 		mixer13.gain(0, 0);
 		mixer13.gain(2, 0);
 		//ON
-		mixer13.gain(1, 0.8);
+		mixer13.gain(1, 0.5);
 		envelope6.noteOn();
 		
-		pwm1.amplitude(0.18);
+		pwm1.amplitude(0.28);
 		waveform8.amplitude(0.8);
-		waveform8.frequency(float(touchY)/60);
+		waveform8.frequency(float(touchY)/50);
 		
 		
 		//  if(gateTrig == true) {
@@ -705,7 +715,7 @@ void rightTrigger() {
 		mixer13.gain(1, 0); //LPF//set gain for other channels
 		mixer13.gain(0, 0);
 		//ON
-		mixer13.gain(2, 0.8);
+		mixer13.gain(2, 1.2);
 		if (touchX < 100) { //if being touched and trig is true..
 			envelope6.noteOn();
 			//Serial.print(arpegg);
@@ -829,6 +839,7 @@ void buttons_update(void)
 }
 
 void loop() {
+	
 	GPIOOnline=1;
 	led_test();
 	buttons_update();
@@ -837,7 +848,7 @@ void loop() {
 	if(sinceVolume>25)
 	{
 		float volSetting;
-		volSetting=float(analogRead(A15))/1023.*0.4+0.4;
+		volSetting=float(analogRead(A15))/1023.*0.4+0.6;
 		audioShield.volume(volSetting);
 		sinceVolume=0;
 	}
@@ -855,7 +866,7 @@ void loop() {
 	filter3.frequency(filterOffset);
 	filter4.frequency(filterOffset);
 	filter5.frequency(filterOffset);
-	float decayTime = mapfloat(analogRead(33), 0, 1023, 40.0, 1000.0); // Max decay Range
+	float decayTime = mapfloat(analogRead(33), 0, 1023, 130.0, 1000.0); // Max decay Range
 	
 	envelope1.decay(decayTime);
 	envelope2.decay(decayTime);
@@ -914,132 +925,211 @@ void led_test(void)
 
 void do_left_panel(void) // Ross's panel
 {
-	// CHORD SELECTION
-	if (transposeClock >= 60000) { // one minute
-		chordSelect = random(4)+1;
-		transpose = random(-12, 12);
-		transposeClock = 0;
+	int upSmooth=1;
+	int downSmooth=4;
+	float capDiff[5];
+	touchSensor[0] = (touchRead(16));
+	touchSensor[1] = (touchRead(29));
+	touchSensor[2] = (touchRead(30));
+	touchSensor[3] = (touchRead(1));
+	touchSensor[4] = (touchRead(0));
+	
+	for (int i=0; i < 5; i++) {
+	  Serial.print(touchSensor[i]);
+	  Serial.print(", ");
+    }
+	Serial.print("   -->   ");
+
+	for (int i=0; i < 5; i++) {
+	  float diff = touchSensor[i] - touchBaseline[i];
+	  Serial.print(diff);
+	  Serial.print(", ");
+	  if (diff > 0) {
+	    int diff_threshold = 340;
+		if (touchPrevious[i]) diff_threshold = 250;
+		if (diff > diff_threshold) {
+	      touchSensor[i] = 10000;
+		  touchPrevious[i] = true;
+		} else {
+		  touchSensor[i] = 0;
+		  touchPrevious[i] = false;
+		}
+	    touchBaseline[i] += diff / 30;
+	  } else {
+	    int diff_threshold = -390;
+		if (touchPrevious[i]) diff_threshold = -270;
+		if (diff < diff_threshold) {
+	      touchSensor[i] = 10000;
+		  touchPrevious[i] = true;
+		} else {
+		  touchSensor[i] = 0;
+		  touchPrevious[i] = false;
+		}
+	    touchBaseline[i] += diff / 25;
+	  }
 	}
+	touchSensor1 = touchSensor[0];
+	touchSensor2 = touchSensor[1];
+	touchSensor3 = touchSensor[2];
+	touchSensor4 = touchSensor[3];
+	touchSensor5 = touchSensor[4];
+
+	/*
+	capDiff[0]=touchSensor[0]-touchSensor1;
+	if(capDiff[0]>=0)
+	touchSensor1=touchSensor1+capDiff[0]/upSmooth;
+	else
+	touchSensor1=touchSensor1+capDiff[0]/downSmooth;
+	capDiff[1]=touchSensor[1]-touchSensor2;
+	if(capDiff[1]>=0)
+	touchSensor2=touchSensor2+capDiff[1]/upSmooth;
+	else
+	touchSensor2=touchSensor2+capDiff[1]/downSmooth;
+	capDiff[2]=touchSensor[2]-touchSensor3;
+	if(capDiff[2]>=0)
+	touchSensor3=touchSensor3+capDiff[2]/upSmooth;
+	else
+	touchSensor3=touchSensor3+capDiff[2]/downSmooth;
+	capDiff[3]=touchSensor[3]-touchSensor4;
+	if(capDiff[3]>=0)
+	touchSensor4=touchSensor4+capDiff[3]/upSmooth;
+	else
+	touchSensor4=touchSensor4+capDiff[3]/downSmooth;
+	capDiff[4]=touchSensor[4]-touchSensor5;
+    if(capDiff[4]>=0)
+    touchSensor5=touchSensor5+capDiff[4]/upSmooth;
+    else
+    touchSensor5=touchSensor5+capDiff[4]/downSmooth;
+    */
+
+
+
+Serial.print("      ");
+for (int i=0; i < 5; i++) {
+	Serial.print(touchBaseline[i]);
+	Serial.print(", ");
+}
+Serial.println("------"); 
+// CHORD SELECTION
+if (transposeClock >= 60000) { // one minute
+	chordSelect = random(4)+1;
+	transpose = random(-12, 12);
+	transposeClock = 0;
+}
+
+// PWM
+//pw = mapfloat(analogRead(32), 0, 1023, 0.0, 1.0);
+
+// waveform1.pulseWidth(pw);
+//waveform2.pulseWidth(pw);
+//waveform3.pulseWidth(pw);
+//waveform4.pulseWidth(pw);
+//waveform5.pulseWidth(pw);
+
+switch (chordSelect) {
 	
-	// PWM
-	//pw = mapfloat(analogRead(32), 0, 1023, 0.0, 1.0);
+	// MAJ
+	case 1:
+	chord[0] = 0;
+	chord[1] = 4;
+	chord[2] = 7;
+	chord[3] = 12;
+	chord[4] = 16;
+	break;
 	
-	// waveform1.pulseWidth(pw);
-	//waveform2.pulseWidth(pw);
-	//waveform3.pulseWidth(pw);
-	//waveform4.pulseWidth(pw);
-	//waveform5.pulseWidth(pw);
+	// MIN
+	case 2:
+	chord[0] = 0;
+	chord[1] = 3;
+	chord[2] = 7;
+	chord[3] = 12;
+	chord[4] = 15;
+	break;
 	
-	switch (chordSelect) {
-		
-		// MAJ
-		case 1:
-		chord[0] = 0;
-		chord[1] = 4;
-		chord[2] = 7;
-		chord[3] = 12;
-		chord[4] = 16;
-		break;
-		
-		// MIN
-		case 2:
-		chord[0] = 0;
-		chord[1] = 3;
-		chord[2] = 7;
-		chord[3] = 12;
-		chord[4] = 15;
-		break;
-		
-		// major7
-		case 3:
-		chord[0] = 0;
-		chord[1] = 4;
-		chord[2] = 7;
-		chord[3] = 11;
-		chord[4] = 12;
-		break;
-		
-		// minor7
-		case 4:
-		chord[0] = 0;
-		chord[1] = 3;
-		chord[2] = 7;
-		chord[3] = 10;
-		chord[4] = 12;
-		break;
-	}
+	// major7
+	case 3:
+	chord[0] = 0;
+	chord[1] = 4;
+	chord[2] = 7;
+	chord[3] = 11;
+	chord[4] = 12;
+	break;
 	
-	// Octave modulation
-	debounceTime = 50;
-	
-	
-	baseOctave = 60;
-	octaveMod = buttonCount * 12;
-	
-	waveform1.frequency(mtof(chord[0] + baseOctave + transpose + octaveMod));
-	waveform2.frequency(mtof(chord[1] + baseOctave + transpose + octaveMod) + 0.5);
-	waveform3.frequency(mtof(chord[2] + baseOctave + transpose + octaveMod) - 0.5);
-	waveform4.frequency(mtof(chord[3] + baseOctave + transpose + octaveMod) + 0.75);
-	waveform5.frequency(mtof(chord[4] + baseOctave + transpose + octaveMod) - 0.75);
-	
-	// Touch sensor reads
-	static float touchSensor1, touchSensor2, touchSensor3, touchSensor4, touchSensor5;
-	touchSensor1 = (touchRead(16));
-	touchSensor2 = (touchRead(29));
-	touchSensor3 = (touchRead(30));
-	touchSensor4 = (touchRead(1));
-	touchSensor5 = (touchRead(0));
-	//16,29,30,1,0
-	// ch. 1 Sensor smoothing
+	// minor7
+	case 4:
+	chord[0] = 0;
+	chord[1] = 3;
+	chord[2] = 7;
+	chord[3] = 10;
+	chord[4] = 12;
+	break;
+}
+
+// Octave modulation
+debounceTime = 50;
+
+
+baseOctave = 60;
+octaveMod = buttonCount * 12;
+
+waveform1.frequency(mtof(chord[0] + baseOctave + transpose + octaveMod));
+waveform2.frequency(mtof(chord[1] + baseOctave + transpose + octaveMod) + 0.5);
+waveform3.frequency(mtof(chord[2] + baseOctave + transpose + octaveMod) - 0.5);
+waveform4.frequency(mtof(chord[3] + baseOctave + transpose + octaveMod) + 0.75);
+waveform5.frequency(mtof(chord[4] + baseOctave + transpose + octaveMod) - 0.75);
+
+// Touch sensor reads
+//16,29,30,1,0
+// ch. 1 Sensor smoothing
+/*
 	float sensorDifference1 = (touchSensor1 - sensorMinimum1); // Find the minimum average
 	if (sensorDifference1 > 0) {
-		sensorSmoothness1 = 3000; // "Attack time"
+	sensorSmoothness1 = 30; // "Attack time"
 	}
 	else {
-		sensorSmoothness1 = 5; // "Release time"
+	sensorSmoothness1 = 5; // "Release time"
 	}
 	sensorMinimum1 = sensorMinimum1 + (sensorDifference1 / sensorSmoothness1);
 	
 	// ch. 2 Sensor smoothing
 	float sensorDifference2 = (touchSensor2 - sensorMinimum2); // Find the minimum average
 	if (sensorDifference2 > 0) {
-		sensorSmoothness2 = 3000; // "Attack time"
+	sensorSmoothness2 = 30; // "Attack time"
 	}
 	else {
-		sensorSmoothness2 = 5; // "Release time"
+	sensorSmoothness2 = 5; // "Release time"
 	}
 	sensorMinimum2 = sensorMinimum2 + (sensorDifference2 / sensorSmoothness2);
 	
 	// ch. 3 Sensor smoothing
 	float sensorDifference3 = (touchSensor3 - sensorMinimum3); // Find the minimum average
 	if (sensorDifference3 > 0) {
-		sensorSmoothness3 = 3000; // "Attack time"
+	sensorSmoothness3 = 30; // "Attack time"
 	}
 	else {
-		sensorSmoothness3 = 5; // "Release time"
+	sensorSmoothness3 = 5; // "Release time"
 	}
 	sensorMinimum3 = sensorMinimum3 + (sensorDifference3 / sensorSmoothness3);
 	
 	// ch. 4 Sensor smoothing
 	float sensorDifference4 = (touchSensor4 - sensorMinimum4); // Find the minimum average
 	if (sensorDifference4 > 0) {
-		sensorSmoothness4 = 3000; // "Attack time"
+	sensorSmoothness4 = 30; // "Attack time"
 	}
 	else {
-		sensorSmoothness4 = 5; // "Release time"
+	sensorSmoothness4 = 5; // "Release time"
 	}
 	sensorMinimum4 = sensorMinimum4 + (sensorDifference4 / sensorSmoothness4);
 	
 	// ch. 5 Sensor smoothing
 	float sensorDifference5 = (touchSensor5 - sensorMinimum5); // Find the minimum average
 	if (sensorDifference5 > 0) {
-		sensorSmoothness5 = 3000; // "Attack time"
+	sensorSmoothness5 = 30; // "Attack time"
 	}
 	else {
-		sensorSmoothness5 = 5; // "Release time"
+	sensorSmoothness5 = 5; // "Release time"
 	}
 	sensorMinimum5 = sensorMinimum5 + (sensorDifference5 / sensorSmoothness5);
-	
 	
 	// subtract minimum
 	float cleanSensorOutput1 = touchSensor1 - sensorMinimum1;
@@ -1047,7 +1137,6 @@ void do_left_panel(void) // Ross's panel
 	float cleanSensorOutput3 = touchSensor3 - sensorMinimum3;
 	float cleanSensorOutput4 = touchSensor4 - sensorMinimum4;
 	float cleanSensorOutput5 = touchSensor5 - sensorMinimum5;
-	
 	// truncate highest/lowest
 	cleanSensorOutput1 = max(cleanSensorOutput1, 0); // truncate lowest possible value to 0
 	cleanSensorOutput1 = min(cleanSensorOutput1, 1200); // truncate highest possible value to 1200
@@ -1063,157 +1152,156 @@ void do_left_panel(void) // Ross's panel
 	
 	cleanSensorOutput5 = max(cleanSensorOutput5, 0); // truncate lowest possible value to 0
 	cleanSensorOutput5 = min(cleanSensorOutput5, 1200); // truncate highest possible value to 1200
+*/
+// Comparators
+
+/*
+	gate1[1] = gate1[0];
+	gate1[0] = cleanSensorOutput1 >= thresh; // Comparator threshold for touch sensor
 	
-	// Comparators
+	gate2[1] = gate2[0];
+	gate2[0] = cleanSensorOutput2 >= thresh; // Comparator threshold for touch sensor
 	
-	int thresh = 2300; // global threshold
-	/*
-		gate1[1] = gate1[0];
-		gate1[0] = cleanSensorOutput1 >= thresh; // Comparator threshold for touch sensor
-		
-		gate2[1] = gate2[0];
-		gate2[0] = cleanSensorOutput2 >= thresh; // Comparator threshold for touch sensor
-		
-		gate3[1] = gate3[0];
-		gate3[0] = cleanSensorOutput3 >= thresh; // Comparator threshold for touch sensor
-		
-		gate4[1] = gate4[0];
-		gate4[0] = cleanSensorOutput4 >= thresh; // Comparator threshold for touch sensor
-		
-		gate5[1] = gate5[0];
-		gate5[0] = cleanSensorOutput5 >= thresh; // Comparator threshold for touch sensor
-		
-		// Divide
-		
-		if (stepCount % divide == 0) {
-		gate1[1] = 0;
-		gate2[1] = 0;
-		gate3[1] = 0;
-		gate4[1] = 0;
-		gate5[1] = 0;
-		}
-		else {
-		gate1[1] = 1;
-		gate2[1] = 1;
-		gate3[1] = 1;
-		gate4[1] = 1;
-		gate5[1] = 1;
-		}
-	*/
-	// ch.1  Note on/off messages
-	if (touchSensor1>thresh) {
-		envelope1.noteOn();
+	gate3[1] = gate3[0];
+	gate3[0] = cleanSensorOutput3 >= thresh; // Comparator threshold for touch sensor
+	
+	gate4[1] = gate4[0];
+	gate4[0] = cleanSensorOutput4 >= thresh; // Comparator threshold for touch sensor
+	
+	gate5[1] = gate5[0];
+	gate5[0] = cleanSensorOutput5 >= thresh; // Comparator threshold for touch sensor
+	
+	// Divide
+	
+	if (stepCount % divide == 0) {
+	gate1[1] = 0;
+	gate2[1] = 0;
+	gate3[1] = 0;
+	gate4[1] = 0;
+	gate5[1] = 0;
 	}
-	
-	if (touchSensor1<thresh) {
-		envelope1.noteOff();
+	else {
+	gate1[1] = 1;
+	gate2[1] = 1;
+	gate3[1] = 1;
+	gate4[1] = 1;
+	gate5[1] = 1;
 	}
+*/
+// ch.1  Note on/off messages
+if (touchSensor1>thresh[0]) {
+	envelope1.noteOn();
+}
+
+if (touchSensor1<thresh[0]) {
+	envelope1.noteOff();
+}
+
+// ch. 2 Note on/off messages
+
+if (touchSensor2>thresh[1]) {
+	envelope2.noteOn();
+}
+
+if (touchSensor2<thresh[1]) {
+	envelope2.noteOff();
+}
+
+// ch. 3 Note on/off messages
+
+if (touchSensor3>thresh[2]) {
+	envelope3.noteOn();
+}
+
+if (touchSensor3<thresh[2]) {
+	envelope3.noteOff();
+}
+
+// ch. 4 Note on/off messages
+
+if (touchSensor4>thresh[3]) {
+	envelope4.noteOn();
+}
+
+if (touchSensor4<thresh[3]) {
+	envelope4.noteOff();
+}
+
+// ch. 5 Note on/off messages
+if (touchSensor5>thresh[4]) {
+	envelope5.noteOn();
+}
+
+if (touchSensor5<thresh[4]) {
+	envelope5.noteOff();
+}
+/*
 	
-	// ch. 2 Note on/off messages
+	// Map sensor data to filter range
+	currentFilterCutoff1 = mapfloat(cleanSensorOutput1, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
+	currentFilterCutoff2 = mapfloat(cleanSensorOutput2, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
+	currentFilterCutoff3 = mapfloat(cleanSensorOutput3, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
+	currentFilterCutoff4 = mapfloat(cleanSensorOutput4, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
+	currentFilterCutoff5 = mapfloat(cleanSensorOutput5, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
 	
-	if (touchSensor2>thresh) {
-		envelope2.noteOn();
+	// ch. 1 filter slew
+	float cutoffDifference1 = (currentFilterCutoff1 - smoothedFilterCutoff1);
+	if (cutoffDifference1 > 0) {
+	filterCutoffSlew1 = 20; // "Attack Time"
 	}
-	
-	if (touchSensor2<thresh) {
-		envelope2.noteOff();
+	else {
+	filterCutoffSlew1 = 5; // "Release Time"
 	}
+	smoothedFilterCutoff1 = smoothedFilterCutoff1 + cutoffDifference1 / filterCutoffSlew1; // Find average
 	
-	// ch. 3 Note on/off messages
-	
-	if (touchSensor3>thresh) {
-		envelope3.noteOn();
+	// ch. 2 filter slew
+	float cutoffDifference2 = (currentFilterCutoff2 - smoothedFilterCutoff2);
+	if (cutoffDifference2 > 0) {
+	filterCutoffSlew2 = 20; // "Attack Time"
 	}
-	
-	if (touchSensor3<thresh) {
-		envelope3.noteOff();
+	else {
+	filterCutoffSlew2 = 5; // "Release Time"
 	}
+	smoothedFilterCutoff2 = smoothedFilterCutoff2 + cutoffDifference2 / filterCutoffSlew2; // Find average
 	
-	// ch. 4 Note on/off messages
-	
-	if (touchSensor4>thresh) {
-		envelope4.noteOn();
+	// ch. 3 filter slew
+	float cutoffDifference3 = (currentFilterCutoff3 - smoothedFilterCutoff3);
+	if (cutoffDifference3 > 0) {
+	filterCutoffSlew3 = 20; // "Attack Time"
 	}
-	
-	if (touchSensor4<thresh) {
-		envelope4.noteOff();
+	else {
+	filterCutoffSlew3 = 5; // "Release Time"
 	}
+	smoothedFilterCutoff3 = smoothedFilterCutoff3 + cutoffDifference3 / filterCutoffSlew3; // Find average
 	
-	// ch. 5 Note on/off messages
-	if (touchSensor5>thresh) {
-		envelope5.noteOn();
+	// ch. 4 filter slew
+	float cutoffDifference4 = (currentFilterCutoff4 - smoothedFilterCutoff4);
+	if (cutoffDifference4 > 0) {
+	filterCutoffSlew4 = 20; // "Attack Time"
 	}
-	
-	if (touchSensor5<thresh) {
-		envelope5.noteOff();
+	else {
+	filterCutoffSlew4 = 5; // "Release Time"
 	}
-	/*
-		
-		// Map sensor data to filter range
-		currentFilterCutoff1 = mapfloat(cleanSensorOutput1, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
-		currentFilterCutoff2 = mapfloat(cleanSensorOutput2, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
-		currentFilterCutoff3 = mapfloat(cleanSensorOutput3, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
-		currentFilterCutoff4 = mapfloat(cleanSensorOutput4, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
-		currentFilterCutoff5 = mapfloat(cleanSensorOutput5, 0, 1200, 0, 10000); // Maximum sensor range mapped to maximum filter range
-		
-		// ch. 1 filter slew
-		float cutoffDifference1 = (currentFilterCutoff1 - smoothedFilterCutoff1);
-		if (cutoffDifference1 > 0) {
-		filterCutoffSlew1 = 20; // "Attack Time"
-		}
-		else {
-		filterCutoffSlew1 = 5; // "Release Time"
-		}
-		smoothedFilterCutoff1 = smoothedFilterCutoff1 + cutoffDifference1 / filterCutoffSlew1; // Find average
-		
-		// ch. 2 filter slew
-		float cutoffDifference2 = (currentFilterCutoff2 - smoothedFilterCutoff2);
-		if (cutoffDifference2 > 0) {
-		filterCutoffSlew2 = 20; // "Attack Time"
-		}
-		else {
-		filterCutoffSlew2 = 5; // "Release Time"
-		}
-		smoothedFilterCutoff2 = smoothedFilterCutoff2 + cutoffDifference2 / filterCutoffSlew2; // Find average
-		
-		// ch. 3 filter slew
-		float cutoffDifference3 = (currentFilterCutoff3 - smoothedFilterCutoff3);
-		if (cutoffDifference3 > 0) {
-		filterCutoffSlew3 = 20; // "Attack Time"
-		}
-		else {
-		filterCutoffSlew3 = 5; // "Release Time"
-		}
-		smoothedFilterCutoff3 = smoothedFilterCutoff3 + cutoffDifference3 / filterCutoffSlew3; // Find average
-		
-		// ch. 4 filter slew
-		float cutoffDifference4 = (currentFilterCutoff4 - smoothedFilterCutoff4);
-		if (cutoffDifference4 > 0) {
-		filterCutoffSlew4 = 20; // "Attack Time"
-		}
-		else {
-		filterCutoffSlew4 = 5; // "Release Time"
-		}
-		smoothedFilterCutoff4 = smoothedFilterCutoff4 + cutoffDifference4 / filterCutoffSlew4; // Find average
-		
-		// ch. 5 filter slew
-		float cutoffDifference5 = (currentFilterCutoff5 - smoothedFilterCutoff5);
-		if (cutoffDifference5 > 0) {
-		filterCutoffSlew5 = 20; // "Attack Time"
-		}
-		else {
-		filterCutoffSlew5 = 5; // "Release Time"
-		}
-		smoothedFilterCutoff5 = smoothedFilterCutoff5 + cutoffDifference5 / filterCutoffSlew5; // Find average
-	*/
+	smoothedFilterCutoff4 = smoothedFilterCutoff4 + cutoffDifference4 / filterCutoffSlew4; // Find average
 	
-	
-	
+	// ch. 5 filter slew
+	float cutoffDifference5 = (currentFilterCutoff5 - smoothedFilterCutoff5);
+	if (cutoffDifference5 > 0) {
+	filterCutoffSlew5 = 20; // "Attack Time"
+	}
+	else {
+	filterCutoffSlew5 = 5; // "Release Time"
+	}
+	smoothedFilterCutoff5 = smoothedFilterCutoff5 + cutoffDifference5 / filterCutoffSlew5; // Find average
+*/
+
+
+
 }
 
 void do_center_panel(void)  //Bens Sequencer
 {
-	leftTiming = timingValues[map(analogRead(31), 0, 1023, 4,0)]; // Division amounts
+	leftTiming = timingValues[map(analogRead(31), 0, 1023, 2,0)]*2; // Division amounts
 	for(int i=0;i<40;i++)
 	{
 		if(currentButtons[buttonMapping[i]]<lastButtons[buttonMapping[i]])
@@ -1252,9 +1340,9 @@ void do_center_panel(void)  //Bens Sequencer
 	}
 	float diff;
 	diff = analogRead(A16) - tempo; //was A16, changed to A17 for DRC test
-	tempo = tempo + diff / 4;
-	tempo = int(tempo / 3) + 70;
-	if (sinceTempo >= (15000 / (tempo*8)))
+	tempo = tempo + diff / 40;
+	int finalTempo=tempo /10  + 80;
+	if (sinceTempo >= (15000 / (finalTempo*8)))
 	{
 		if(stepCount%rightTiming==0)
 		rightTrigger();
@@ -1364,8 +1452,8 @@ void do_right_panel(void)   // DRC touch panel synth stuff goes here
 {
 	//    Serial.print("modeSelect");
 	//      Serial.print(modeSelect);
-	int rightTimeSelection=map(analogRead(A17),0,1023,4,0);
-	rightTiming=timingValues[int(rightTimeSelection)]/2;
+	int rightTimeSelection=map(analogRead(A17),0,1023,2,0);
+	rightTiming=timingValues[int(rightTimeSelection)];
 	//Serial.print(" p.x = "); Serial.print(p.x);
 	//Serial.print("p.y = "); Serial.print(p.y);
 	//int envelope6Control = map(analogRead(TsPot2), 0, 1023, 0.00, 2.00);
