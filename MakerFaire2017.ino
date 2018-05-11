@@ -542,6 +542,7 @@ void rightTrigger() {
 			gateTrig = false;
 			//Serial.println("222");
 			
+			Serial1.write('a');
 		}
 		
 		//Y mapped for bitcrushing
@@ -607,6 +608,8 @@ void rightTrigger() {
 			if(sinceRightTrigger > 200) {
 				envelope6.noteOff();
 				//          sinceRightTrigger = 0;
+			} else {
+				Serial1.write('b');
 			}
 			//arpegg++;
 			gateTrig = false;
@@ -627,6 +630,8 @@ void rightTrigger() {
 			if(sinceRightTrigger > 200) {
 				envelope6.noteOff();
 				//          sinceRightTrigger = 0;
+			} else {
+				Serial1.write('b');
 			}
 			//arpegg++;
 			gateTrig = false;
@@ -648,6 +653,8 @@ void rightTrigger() {
 				envelope6.noteOff();
 				//          sinceRightTrigger = 0;
 				
+			} else {
+				Serial1.write('b');
 			}
 			//arpegg = 0;
 			gateTrig = false;
@@ -738,6 +745,7 @@ void rightTrigger() {
 			//waveform6-8 controlled by envelope6
 			//envelope6.noteOn();
 			
+			Serial1.write('c');
 		}
 		
 		//arpegg++;
@@ -1206,6 +1214,7 @@ waveform5.frequency(mtof(chord[4] + baseOctave + transpose + octaveMod) - 0.75);
 // ch.1  Note on/off messages
 if (touchSensor1>thresh[0]) {
 	envelope1.noteOn();
+	Serial1.write('A');
 }
 
 if (touchSensor1<thresh[0]) {
@@ -1216,6 +1225,7 @@ if (touchSensor1<thresh[0]) {
 
 if (touchSensor2>thresh[1]) {
 	envelope2.noteOn();
+	Serial1.write('B');
 }
 
 if (touchSensor2<thresh[1]) {
@@ -1226,6 +1236,7 @@ if (touchSensor2<thresh[1]) {
 
 if (touchSensor3>thresh[2]) {
 	envelope3.noteOn();
+	Serial1.write('C');
 }
 
 if (touchSensor3<thresh[2]) {
@@ -1236,6 +1247,7 @@ if (touchSensor3<thresh[2]) {
 
 if (touchSensor4>thresh[3]) {
 	envelope4.noteOn();
+	Serial1.write('D');
 }
 
 if (touchSensor4<thresh[3]) {
@@ -1245,6 +1257,7 @@ if (touchSensor4<thresh[3]) {
 // ch. 5 Note on/off messages
 if (touchSensor5>thresh[4]) {
 	envelope5.noteOn();
+	Serial1.write('E');
 }
 
 if (touchSensor5<thresh[4]) {
