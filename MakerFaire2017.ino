@@ -950,26 +950,36 @@ void do_left_panel(void) // Ross's panel
 	  Serial.print(", ");
 	  if (diff > 0) {
 	    int diff_threshold = 340;
-		if (touchPrevious[i]) diff_threshold = 250;
-		if (diff > diff_threshold) {
-	      touchSensor[i] = 10000;
-		  touchPrevious[i] = true;
-		} else {
-		  touchSensor[i] = 0;
-		  touchPrevious[i] = false;
-		}
-	    touchBaseline[i] += diff / 30;
+            if (touchPrevious[i]) diff_threshold = 250;
+            if (diff > diff_threshold) {
+              touchSensor[i] = 10000;
+              touchPrevious[i] = true;
+            } else {
+              touchSensor[i] = 0;
+              touchPrevious[i] = false;
+            }
+	    touchBaseline[i] += diff / 70;
 	  } else {
 	    int diff_threshold = -390;
-		if (touchPrevious[i]) diff_threshold = -270;
-		if (diff < diff_threshold) {
-	      touchSensor[i] = 10000;
-		  touchPrevious[i] = true;
-		} else {
-		  touchSensor[i] = 0;
-		  touchPrevious[i] = false;
-		}
-	    touchBaseline[i] += diff / 25;
+            if (touchPrevious[i]) diff_threshold = -270;
+#ifdef HORRIBLE_ELECTRICAL_INTERFERENCE
+            // Where there's terrible noise, consider any change from the
+            // the baseline to be a note trigger.
+            if (diff < diff_threshold) {
+              touchSensor[i] = 10000;
+              touchPrevious[i] = true;
+            } else {
+              touchSensor[i] = 0;
+              touchPrevious[i] = false;
+            }
+	    touchBaseline[i] += diff / 40;
+#else
+            // For normal conditions, a decrease from the baseline means
+            // a touch has just ended and the baseline is adapting
+            touchSensor[i] = 0;
+            touchPrevious[i] = false;
+	    touchBaseline[i] += diff / 12;
+#endif
 	  }
 	}
 	touchSensor1 = touchSensor[0];
