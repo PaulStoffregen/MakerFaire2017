@@ -313,6 +313,9 @@ float mtof(int note) {     // Outputs a float freq based on incoming MIDI note. 
 }
 
 void setup() {
+	Serial1.setTX(26);
+	Serial1.setRX(27);
+	Serial1.begin(38400);
 	analogReadResolution(10);
 	// Global audio stuff
 	AudioMemory(50);
@@ -848,7 +851,8 @@ void loop() {
 	if(sinceVolume>25)
 	{
 		float volSetting;
-		volSetting=float(analogRead(A15))/1023.*0.4+0.6;
+		//volSetting=float(analogRead(A15))/1023.*0.4+0.6;
+		volSetting=float(analogRead(A15))/1023.*0.4+0.2;
 		audioShield.volume(volSetting);
 		sinceVolume=0;
 	}
@@ -1417,22 +1421,27 @@ void do_center_panel(void)  //Bens Sequencer
 			if (bitRead(row[0], stepCount/drumDivider % 8))
 			{
 				sound4.play(percList[selectedSample[4]]);
+				Serial1.write('4');
 			}
 			if (bitRead(row[1], stepCount/drumDivider % 8))
 			{
 				sound2.play(hatList[selectedSample[2]]);
+				Serial1.write('2');
 			}
 			if (bitRead(row[2], stepCount/drumDivider % 8))
 			{
 				sound1.play(snareList[selectedSample[1]]);
+				Serial1.write('1');
 			}
 			if (bitRead(row[3], stepCount/drumDivider % 8))
 			{
 				sound3.play(clapList[selectedSample[3]%3]);
+				Serial1.write('3');
 			}
 			if (bitRead(row[4], stepCount/drumDivider % 8))
 			{
 				sound0.play(kickList[0]);
+				Serial1.write('0');
 			}
 		}
 		stepCount++;
