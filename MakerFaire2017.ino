@@ -860,8 +860,8 @@ void loop() {
 	if(sinceVolume>25)
 	{
 		float volSetting;
-		//volSetting=float(analogRead(A15))/1023.*0.4+0.6;
-		volSetting=float(analogRead(A15))/1023.*0.4+0.2;
+		volSetting=float(analogRead(A15))/1023.*0.4+0.6; // loud: for public performance
+		//volSetting=float(analogRead(A15))/1023.*0.4+0.2; // quiet: for home testing
 		audioShield.volume(volSetting);
 		sinceVolume=0;
 	}
