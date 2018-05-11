@@ -488,6 +488,7 @@ void setup() {
 	envelope6.sustain(0);
 	envelope6.attack(1.5);
 	envelope6.hold(0.5);
+	envelope6.releaseNoteOn(0);
 	
 	
 }
